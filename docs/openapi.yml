@@ -1,0 +1,100 @@
+openapi: '3.0.3'
+info:
+  title: Digital Banking in Madagascar
+  version: 1.0.0
+servers:
+  - url: https://DBM.com
+tags:
+  - name: Account
+
+paths:
+  /accounts:
+    post:
+      tags:
+        - Account
+      summary: Create Account
+      operationId: CreateAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        200:
+          $ref: '#/components/responses/200'
+        400:
+          $ref: '#/components/responses/400'
+        409:
+          $ref: '#/components/responses/409'
+
+    put:
+      tags:
+        - Account
+      summary: Update Account
+      operationId: UpdateAccount
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Account'
+      responses:
+        200:
+          $ref: '#/components/responses/200'
+        400:
+          $ref: '#/components/responses/400'
+
+    get:
+      tags:
+        - Account
+      summary: Get All accounts
+      description: List of accounts
+      operationId: getAccounts
+      responses:
+        200:
+          $ref: '#/components/responses/200'
+
+
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        Name:
+          type: string
+        LastName:
+          type: string
+        dateofbirth:
+          type: string
+          format: date
+        NetMonthlySalary:
+          type: number
+        UniqueAccountNumber:
+          type: string
+  responses:
+    200:
+      description: successfully
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Account'
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Account'
+    409:
+      description: Account already exist
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Account'
+
