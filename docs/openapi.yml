@@ -4,97 +4,196 @@ info:
   version: 1.0.0
 servers:
   - url: https://DBM.com
-tags:
+tags: 
   - name: Account
-
 paths:
-  /accounts:
-    post:
+  /account:
+    get:
       tags:
         - Account
-      summary: Create Account
+      summary: Get All accounts
+      description: The Returned books are ordered by name  
+      operationId: getAccounts
+      responses:
+        200: 
+          $ref: '#/components/responses/200'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        400:
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+                
+
+    post:
+      tags: 
+        - Account
+      summary: Create a new Account
       operationId: CreateAccount
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Account'
-      responses:
-        200:
-          $ref: '#/components/responses/200'
-        400:
+              $ref: '#/components/schemas/AccountInput'
+      responses: 
+        '201':
+          $ref: '#/components/responses/201'
+        '400':
           $ref: '#/components/responses/400'
-        409:
-          $ref: '#/components/responses/409'
-
     put:
-      tags:
+      tags: 
         - Account
-      summary: Update Account
-      operationId: UpdateAccount
-      requestBody:
+      parameters:
+        - in: path
+          name: account_Id
+          required: true 
+          schema: 
+            type: string 
+      requestBody: 
         required: true
         content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Account'
+          application/json: 
+            schema: 
+               $ref: '#/components/schemas/AccountInput'
       responses:
-        200:
-          $ref: '#/components/responses/200'
-        400:
-          $ref: '#/components/responses/400'
-
-    get:
-      tags:
-        - Account
-      summary: Get All accounts
-      description: List of accounts
-      operationId: getAccounts
-      responses:
-        200:
-          $ref: '#/components/responses/200'
+        200: 
+          description: Account updated successfully
+          content:
+            application/json:
+              schema: 
+                $ref: '#/components/schemas/Account'
+        201: 
+          description: Account created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Account'
+        400: 
+           $ref: '#/components/responses/400'
+          
 
 
 components:
-  schemas:
+  responses: 
+    200:
+      description: Ok
+      content: 
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Successfully'
+    201:
+      description: Created
+      content: 
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Successfully'
+    400:
+      description: Bad Request
+      content: 
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/BadRequest'
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema: 
+           type: array
+           items:
+            $ref: '#/components/schemas/Forbidden'
+
+  schemas: 
     Account:
       type: object
       properties:
-        Name:
+        account_Id:
+          type: integer
+        client_name:
           type: string
-        LastName:
+        client_last_name:
           type: string
-        dateofbirth:
+        date_of_birth:
           type: string
           format: date
-        NetMonthlySalary:
+        net_salary_per_month:
           type: number
-        UniqueAccountNumber:
+          format: double
+        bank_id: 
+          type: integer
+          
+    AccountInput:
+      type: object
+      properties:
+        client_name:
           type: string
-  responses:
-    200:
-      description: successfully
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Account'
-    400:
-      description: Bad request
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Account'
-    409:
-      description: Account already exist
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Account'
+          example: 'Fifaliana'
+        client_last_name:
+          type: string 
+          example: 'Koto'
+        date_of_birth:
+          type: string
+          format: date 
+          example: '2002-03-17'
+        net_salary_per_month:
+          type: number
+          format: double
+          example: 8000.00
+        bank_id: 
+          type: integer
+          example: 1
+        
 
+    ResponseStatus:
+      type: object
+      properties: 
+        code: 
+          type: integer
+          example: 200
+        message: 
+          type: string
+          example: ok
+    Successfully:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Returned successfully
+        data:
+          type: object 
+    ResponseBodyTemplate:
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/ResponseStatus'
+        body:
+          type: object
+    BadRequest:
+      allOf:
+        - $ref: '#/components/schemas/ResponseBodyTemplate'
+      example:
+        status:
+          code: 400
+          message: BAD Request
+        body: {} 
+    Forbidden:
+      allOf:
+        - $ref: '#/components/schemas/ResponseBodyTemplate'
+      example: 
+        status:
+          code: 403
+          message: FORBIDEN 
+        body: {}
+
+       
+
+  
+   
