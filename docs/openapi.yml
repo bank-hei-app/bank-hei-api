@@ -6,6 +6,7 @@ servers:
   - url: https://DBM.com
 tags: 
   - name: Account
+  - name: Transfer
 paths:
   /account:
     get:
@@ -74,7 +75,121 @@ paths:
         400: 
            $ref: '#/components/responses/400'
           
+  /transfer:
+    post:
+      summary: Create a new Transfer 
+      operationId: createTransfer
+      tags:
+        - Transfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank_transfer'
+      responses:
+        '201':  
+          description: Transfer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer'
+        '400':
+          $ref: '#/components/responses/400'
+    get:
+      summary: Retrieve a transfer by its ID
+      operationId: getTransferById
+      tags:
+        - Transfer
+      parameters:
+        - in: path
+          name: bank_transfer_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transfer to retrieve
+      responses:
+        '200':
+          description: Transfer retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer'
+        '400':
+          $ref: '#/components/responses/400'
+    
+  /transfer/{bank_transfer_Id}:  
+    put: 
+      summary: update Transfer by Id 
+      operationId: updateTransferbyId
+      tags:
+        - Transfer
+      parameters: 
+        - in: path
+          name: bank_transfer_Id
+          required: true
+          schema: 
+            type: string
+          description: The ID of the transfer to update 
+      requestBody:
+        required: true
+        content: 
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Bank_transfer'
+      responses:
+        200:
+          description: Transfer update successfully
+          content: 
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer' 
+        400:
+            $ref: '#/components/responses/400'   
 
+    get:
+      summary: Retrieve a transfer by  ID
+      operationId: getTransferById
+      tags:
+        - Transfer
+      parameters:
+        - in: path
+          name: bank_transfer_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transfer to retrieve
+      responses:
+        '200':
+          description: Transfer retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a transfer by its ID
+      operationId: deleteTransferById
+      tags:
+        - Transfer
+      parameters:
+        - in: path
+          name: bank_transfer_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transfer to delete
+      responses:
+        '200':
+          description: Transfer deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'  
 
 components:
   responses: 
@@ -127,8 +242,8 @@ components:
         net_salary_per_month:
           type: number
           format: double
-        bank_id: 
-          type: integer
+      required:
+        - bank_Id
           
     AccountInput:
       type: object
@@ -147,10 +262,26 @@ components:
           type: number
           format: double
           example: 8000.00
-        bank_id: 
+        bank_Id: 
           type: integer
           example: 1
-        
+
+    Bank_transfer:
+      type: object
+      properties:
+        bank_transfer_Id:
+          type: integer
+        date_make_effect:
+          type: string
+          format: timestamp
+        date_register:
+          type: string
+          format: timestamp
+        reference_unique:
+          type: string
+      required:
+        - balance_category_Id
+        - balance_type_Id          
 
     ResponseStatus:
       type: object
