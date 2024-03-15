@@ -8,6 +8,7 @@ tags:
   - name: Account
   - name: Transfer
   - name: Bank
+  - name: TransferList
 paths:
   /account:
     get:
@@ -298,7 +299,119 @@ paths:
               schema:
                 $ref: '#/components/schemas/Successfully'
         '400':
+          $ref: '#/components/responses/400'
+
+  /transferList:
+    post: 
+      summary: Create a new transfer list 
+      operationId: createTransferList
+      tags:
+        - TransferList
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: 
+              $ref: '#/components/schemas/Bank_transfer_list'
+      responses:
+        '201':
+          description: Transfer group created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_list'
+                
+        '400':
+          $ref: '#/components/responses/400'
+            
+    get:
+      summary: Retrieve all transfer list 
+      operationId: getAllTransferList
+      tags:
+        - TransferList
+      responses:
+        '200':
+          description: List of transfer list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank_transfer_list'
+  
+  /transfertList/{TransferListId}:
+    put:
+      summary: Update a transfer list by ID
+      operationId: updateTransferListbyId
+      tags:
+        - TransferList 
+      parameters:
+        - in: path
+          name: bank_transfer_list_Id
+          required: true
+          schema: 
+            type: string
+          description: The Id of the transfer  list to update
+      requestBody:
+        required: true 
+        content:
+          application/json: 
+            schema: 
+              $ref: '#/components/schemas/Bank_transfer_list'
+      responses:
+        '200':
+          description: Transfer group updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_list'
+        '400':
           $ref: '#/components/responses/400' 
+    
+    delete: 
+      summary: Delete a transfer list by ID
+      operationId: deleteTransferListById
+      tags:
+        - TransferList 
+      parameters:
+        - in: path 
+          name: bank_transfer_list_Id
+          required: true
+          schema:
+            type: string
+          description: The Id of transfer to delete 
+      responses:
+        '200':
+          description: Transfer list deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a transfer list by its ID
+      operationId: getTransferListById
+      tags:
+        - TransferGroup
+      parameters:
+        - in: path
+          name: bank_transfer_list_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transfer list to retrieve
+      responses:
+        '200':
+          description: Transfer list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_list'
+        '400':
+          $ref: '#/components/responses/400'
+
 
 components:
   responses: 
@@ -399,7 +512,19 @@ components:
           type: integer
         bank_name:
           type: string     
-
+          
+    Bank_transfer_list:
+      type: object
+      properties:
+        bank_transfer_list_Id:
+          type: integer
+        account_sender_Id:
+          type: integer
+        account_recipients_Id:
+          type: integer
+      required:
+        - bank_transfer_Id
+        - account_Id
     ResponseStatus:
       type: object
       properties: 
