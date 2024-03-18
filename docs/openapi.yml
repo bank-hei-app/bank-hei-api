@@ -12,7 +12,8 @@ tags:
   - name: TransferHistory
   - name: Borrow 
   - name: BorrowList
-  - name: BalanceType
+  - name: BalanceType 
+  - name: BalanceCategory
 paths:
   /account:
     get:
@@ -744,7 +745,7 @@ paths:
                 $ref: '#/components/schemas/Successfully'
         '400':
           $ref: '#/components/responses/400' 
-          
+
   /balanceType:
     get:
       summary: Retrieve all balancetypes
@@ -853,7 +854,115 @@ paths:
                 $ref: '#/components/schemas/Successfully'
         '400':
           $ref: '#/components/responses/400'
-  
+          
+  /balanceCategory:
+    get:
+      summary: Retrieve all balancecategorys
+      operationId: getAllbalancategorys
+      tags:
+        - BalanceCategory
+      responses:
+        '200':
+          description: List of balancecategorys retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Balance_category'  
+    post:
+      summary: Create a new BalanceCategory
+      operationId: CreateBalanceCategory
+      tags:
+        - BalanceCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance_category'
+      responses:
+        '201':
+          description: BalanceCategory created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_category'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /balanceCategory/{balance_category_Id}:
+    put:
+      summary: Update a balancecategory by ID
+      operationId: updatebalancecategoryById
+      tags:
+        - BalanceCategory
+      parameters:
+        - in: path
+          name: balance_category_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancecategory to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance_category'
+      responses:
+        '200':
+          description: BalanceCategory updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_category'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a balancecategory  by  ID
+      operationId: getBalancecategoryById
+      tags:
+        - BalanceCategory
+      parameters:
+        - in: path
+          name: balance_category_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancecategory to retrieve
+      responses:
+        '200':
+          description: BalanceCategory retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_category'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a balancecategory by  ID
+      operationId: deleteBalancecategoryById
+      tags:
+        - BalanceCategory
+      parameters:
+        - in: path
+          name: balance_category_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancecategory to delete
+      responses:
+        '200':
+          description: BalanceCategory deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
 
 components:
   responses: 
@@ -1007,6 +1116,16 @@ components:
           type: integer
         balance_type_name:
           type: string
+
+    Balance_category: 
+      type: object
+      properties:
+        balance_category_Id: 
+          type: integer
+        balance_category_name:
+          type: string
+        description: 
+          type: string      
 
     ResponseStatus:
       type: object
