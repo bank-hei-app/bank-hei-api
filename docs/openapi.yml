@@ -10,6 +10,7 @@ tags:
   - name: Bank
   - name: TransferList 
   - name: TransferHistory
+  - name: Borrow 
 paths:
   /account:
     get:
@@ -412,7 +413,7 @@ paths:
                 $ref: '#/components/schemas/Bank_transfer_list'
         '400':
           $ref: '#/components/responses/400' 
-          
+
   /transferHistory:
     get:
       summary: Retrieve all transferthistorys
@@ -522,6 +523,115 @@ paths:
                 $ref: '#/components/schemas/Successfully'
         '400':
           $ref: '#/components/responses/400'
+
+  /borrow:
+    get:
+      summary: Retrieve all borrows
+      operationId: getAllbanks
+      tags:
+        - Borrow
+      responses:
+        '200':
+          description: List of borrow retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Borrow'  
+    post:
+      summary: Create a new Borrow
+      operationId: createBorrow
+      tags:
+        - Borrow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Borrow'
+      responses:
+        '201':
+          description: Borrow created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /borrow/{borrow_Id}:
+    put:
+      summary: Update a borrow by ID
+      operationId: updateborrowById
+      tags:
+        - Borrow
+      parameters:
+        - in: path
+          name: borrow_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the borrow to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Borrow'
+      responses:
+        '200':
+          description: Transaction updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a borrow by  ID
+      operationId: getBorriwById
+      tags:
+        - Borrow
+      parameters:
+        - in: path
+          name: borrow_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the borrow to retrieve
+      responses:
+        '200':
+          description: Borrow retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a borrow by  ID
+      operationId: deleteBorrowById
+      tags:
+        - Borrow
+      parameters:
+        - in: path
+          name: borrow_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the borrow to delete
+      responses:
+        '200':
+          description: Borrow deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400' 
 
 
 components:
@@ -643,7 +753,22 @@ components:
         bank_transfer_history_Id:
           type: integer
       required:
-        - bank_transfer_Id
+        - bank_transfer_Id 
+    
+    Borrow:
+      type: object
+      properties:
+        borrow_Id:
+         type: integer 
+        montant:
+          type: number
+          format: double
+        percent: 
+          type: number
+          format: decimal
+        date_of_borrow:
+          type: string
+          format: date
 
     ResponseStatus:
       type: object
