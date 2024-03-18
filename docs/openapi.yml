@@ -8,7 +8,8 @@ tags:
   - name: Account
   - name: Transfer
   - name: Bank
-  - name: TransferList
+  - name: TransferList 
+  - name: TransferHistory
 paths:
   /account:
     get:
@@ -410,6 +411,116 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bank_transfer_list'
         '400':
+          $ref: '#/components/responses/400' 
+          
+  /transferHistory:
+    get:
+      summary: Retrieve all transferthistorys
+      operationId: getAlltransferhistorys
+      tags:
+        - TransferHistory
+      responses:
+        '200':
+          description: List of transferthistorys retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank_transfer_history'
+
+    post:
+      summary: Create a new TransferHistory
+      operationId: createTransferHistory
+      tags:
+        - TransferHistory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank_transfer_history'
+      responses:
+        '201':
+          description: TransferHistory created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_history'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /transferHistory/{bank_transfer_Id}:
+    put:
+      summary: Update a transferthistory by ID
+      operationId: updatetransferhistoryById
+      tags:
+        - TransferHistory
+      parameters:
+        - in: path
+          name: bank_transfer_history_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transferthistory to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank_transfer_history'
+      responses:
+        '200':
+          description: TransferHistory updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_history'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a transferthistory by  ID
+      operationId: gettransferhistoryById
+      tags:
+        - TransferHistory
+      parameters:
+        - in: path
+          name: bank_transfer_history_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transferhistory to retrieve
+      responses:
+        '200':
+          description: TransferHistory retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_history'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a transferthistory by  ID
+      operationId: deletetransferhistoryById
+      tags:
+        - TransferHistory
+      parameters:
+        - in: path
+          name: bank_transfer_history_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transferhistory to delete
+      responses:
+        '200':
+          description: Transferhistory deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
           $ref: '#/components/responses/400'
 
 
@@ -525,6 +636,15 @@ components:
       required:
         - bank_transfer_Id
         - account_Id
+
+    Bank_transfer_history:
+      type: object
+      properties:
+        bank_transfer_history_Id:
+          type: integer
+      required:
+        - bank_transfer_Id
+
     ResponseStatus:
       type: object
       properties: 
