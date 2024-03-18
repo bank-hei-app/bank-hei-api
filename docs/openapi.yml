@@ -12,6 +12,7 @@ tags:
   - name: TransferHistory
   - name: Borrow 
   - name: BorrowList
+  - name: BalanceType
 paths:
   /account:
     get:
@@ -743,6 +744,116 @@ paths:
                 $ref: '#/components/schemas/Successfully'
         '400':
           $ref: '#/components/responses/400' 
+          
+  /balanceType:
+    get:
+      summary: Retrieve all balancetypes
+      operationId: getAllbalancetypes
+      tags:
+        - BalanceType
+      responses:
+        '200':
+          description: List of balancetypes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Balance_type'  
+    post:
+      summary: Create a new BalanceType
+      operationId: createBalanceType
+      tags:
+        - BalanceType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance_type'
+      responses:
+        '201':
+          description: BalanceType created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_type'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /balanceType/{bank_type_Id}:
+    put:
+      summary: Update a balancetype by ID
+      operationId: updatebalancetypeById
+      tags:
+        - BalanceType
+      parameters:
+        - in: path
+          name: bank_type_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancetype to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance_type'
+      responses:
+        '200':
+          description: Transaction updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_type'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a balancetype by  ID
+      operationId: getbalancetypeById
+      tags:
+        - BalanceType
+      parameters:
+        - in: path
+          name: balance_type_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancetype to retrieve
+      responses:
+        '200':
+          description: BalanceType retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_type'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a balancetype by  ID
+      operationId: deleteBalancetypeById
+      tags:
+        - BalanceType
+      parameters:
+        - in: path
+          name: balance_type_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancetype to delete
+      responses:
+        '200':
+          description: BalanceType deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+  
 
 components:
   responses: 
@@ -777,8 +888,9 @@ components:
           schema: 
            type: array
            items:
-            $ref: '#/components/schemas/Forbidden'
-
+            $ref: '#/components/schemas/Forbidden' 
+    
+    
   schemas: 
     Account:
       type: object
@@ -887,6 +999,14 @@ components:
       required:
         - account_Id
         - borrow_Id
+
+    Balance_type:
+      type: object
+      properties:
+        balance_type_Id:
+          type: integer
+        balance_type_name:
+          type: string
 
     ResponseStatus:
       type: object
