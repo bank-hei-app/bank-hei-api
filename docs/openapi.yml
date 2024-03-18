@@ -15,6 +15,7 @@ tags:
   - name: BalanceType 
   - name: BalanceCategory
   - name: Deposit
+  - name: Withdrawal
 paths:
   /account:
     get:
@@ -1072,7 +1073,116 @@ paths:
               schema:
                 $ref: '#/components/schemas/Successfully'
         '400':
+          $ref: '#/components/responses/400' 
+  /withdrawal:
+    get:
+      summary: Retrieve all withdrawals
+      operationId: getAllwithdrawalss
+      tags:
+        - Withdrawal
+      responses:
+        '200':
+          description: List of withdrawals retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Withdrawal'  
+    post:
+      summary: Create a new withdrawal
+      operationId: createWithdrawal
+      tags:
+        - Withdrawal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Withdrawal'
+      responses:
+        '201':
+          description: Withdrawal created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Withdrawal'
+        '400':
           $ref: '#/components/responses/400'
+
+  /withdrawal/{withdrawal_Id}:
+    put:
+      summary: Update a withdrawal by ID
+      operationId: updatewithdrawalById
+      tags:
+        - Withdrawal
+      parameters:
+        - in: path
+          name: withdrawal_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the withdrawal to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Withdrawal'
+      responses:
+        '200':
+          description: withdrawal updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Withdrawal'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a withdrawal by  ID
+      operationId: getwithdrawalById
+      tags:
+        - Withdrawal
+      parameters:
+        - in: path
+          name: withdrawal_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the withdrawal to retrieve
+      responses:
+        '200':
+          description: withdrawal retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Withdrawal'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a withdrawal by  ID
+      operationId: deletewithdrawalById
+      tags:
+        - Withdrawal
+      parameters:
+        - in: path
+          name: withdrawal_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the withdrawal delete
+      responses:
+        '200':
+          description: withdrawal deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400' 
+
 
 components:
   responses: 
@@ -1248,6 +1358,23 @@ components:
           format: timestamp
         amount:
           type: number
+          format: double
+      required:
+        - balance_type_Id
+        - balance_category_Id 
+
+    Withdrawal:
+      type: object
+      properties:
+        withdrawal_Id:
+          type: integer
+        account_Id:
+          type: integer
+        date_of_withdrawal:
+          type: string
+          format: date 
+        amount:
+          type: integer
           format: double
       required:
         - balance_type_Id
