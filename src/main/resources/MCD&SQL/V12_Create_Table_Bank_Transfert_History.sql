@@ -1,6 +1,6 @@
-CREATE TABLE Bank_transfert_history(
-    bank_transfert_history int primary key ,
-    bank_transfert int references Bank_transfert(bank_transfert_id)
+CREATE TABLE bank_transfer_history(
+    bank_transfer_history int primary key ,
+    bank_transfer int references bank_transfer(bank_transfer_id)
 );
 
 
