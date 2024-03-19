@@ -15,7 +15,7 @@ public class Withdrawal {
     private Date dateOfWithdrawal;
     @Column(name = Withdrawal.amount2)
     private double amount;
-    @Column(name = Withdrawal.balanceCategoryId2)
+    @Column(name = Withdrawal.balanceTypeId2)
     private int balanceTypeId;
     @Column(name = Withdrawal.balanceCategoryId2)
     private int balanceCategoryId;
