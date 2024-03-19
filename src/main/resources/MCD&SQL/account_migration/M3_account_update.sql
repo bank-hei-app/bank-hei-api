@@ -1,1 +1,1 @@
-UPDATE account set (client_name=?,)
+UPDATE account set client_name=?,client_last_name=?,date_of_birth=?,net_salary_per_month=?,account_number=?,bank_id=?,default_solde=? WHERE account_id=?;
