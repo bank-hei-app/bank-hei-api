@@ -1,13 +1,27 @@
 package school.hei.bankapi.model;
 
-import java.util.Date;
+import org.springframework.boot.BootstrapRegistry;
+import school.hei.bankapi.utils.annotations.Column;
+import school.hei.bankapi.utils.annotations.Table;
 
+import java.util.Date;
+@Table(table_name = Borrow.tableName , id = Borrow.iD)
 public class Borrow {
+    @Column(name = Borrow.iD)
     private int borrowId;
+    @Column(name = Borrow.amount2)
     private double amount;
+    @Column(name = Borrow.percent2)
     private double percent;
+    @Column(name = Borrow.dateOfBorrow2)
     private Date dateOfBorrow;
 
+    public static final String tableName = "borrow";
+
+    public static final String iD = "borrow_id";
+    public static final String amount2 = "amount";
+    public static final String percent2 = "percent";
+    public static final String dateOfBorrow2 = "date_of_borrow";
 
 
     public Borrow(int borrowId, double amount, double percent, Date dateOfBorrow) {

@@ -1,12 +1,23 @@
 package school.hei.bankapi.model;
 
+import school.hei.bankapi.utils.annotations.Column;
+import school.hei.bankapi.utils.annotations.Table;
+
+@Table(table_name = BorrowList.tableName , id=BorrowList.iD)
 public class BorrowList {
+    @Column(name = BorrowList.iD)
     private int borrowListId;
+    @Column(name = BorrowList.accountId2)
     private int accountId;
+    @Column(name = BorrowList.borrowId2)
     private int borrowId;
 
-    public BorrowList() {
-    }
+    public static final String tableName = "borrow_list";
+    public static final String iD = "borrow_list_id";
+    public static final String accountId2 = "account_id";
+    public static final String borrowId2 = "borrow_id";
+
+
 
     public BorrowList(int borrowListId, int accountId, int borrowId) {
         this.borrowListId = borrowListId;

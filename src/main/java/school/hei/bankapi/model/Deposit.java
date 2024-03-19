@@ -1,14 +1,32 @@
 package school.hei.bankapi.model;
 
-import java.util.Date;
+import school.hei.bankapi.utils.annotations.Column;
+import school.hei.bankapi.utils.annotations.Table;
 
+import java.util.Date;
+@Table(table_name = Deposit.tableName, id=Deposit.iD)
 public class Deposit {
+    @Column(name = Deposit.iD)
     private int depositId;
+
+    @Column(name = Deposit.accountId2)
     private int accountId;
+    @Column(name = Deposit.dateOfDeposit2)
     private Date dateOfDeposit;
+    @Column(name = Deposit.amount2)
     private double amount;
+    @Column(name = Deposit.balanceTypeId2)
     private int balanceTypeId;
+    @Column(name = Deposit.balanceCategoryId2)
     private int balanceCategoryId;
+
+    public static final String tableName = "deposit";
+    public static final String iD = "deposit_id";
+    public static final String accountId2 = "account_id";
+    public static final String dateOfDeposit2 = "date_of_deposit";
+    public static final String amount2 = "amount";
+    public static final String balanceTypeId2 = "balance_type_id";
+    public static final String  balanceCategoryId2 = "balance_category_id";
 
     public Deposit(int depositId, int accountId, Date dateOfDeposit, double amount, int balanceTypeId, int balanceCategoryId) {
         this.depositId = depositId;

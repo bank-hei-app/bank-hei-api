@@ -1,14 +1,32 @@
 package school.hei.bankapi.model;
 
+import school.hei.bankapi.utils.annotations.Column;
+import school.hei.bankapi.utils.annotations.Table;
+
 import java.util.Date;
 
+@Table(table_name = Withdrawal.tableName , id=Withdrawal.iD)
 public class Withdrawal {
+    @Column(name = Withdrawal.iD)
     private int withdrawalId;
+    @Column(name = Withdrawal.accountId2)
     private int accountId;
+    @Column(name = Withdrawal.dateOfWithdrawal2)
     private Date dateOfWithdrawal;
+    @Column(name = Withdrawal.amount2)
     private double amount;
+    @Column(name = Withdrawal.balanceCategoryId2)
     private int balanceTypeId;
+    @Column(name = Withdrawal.balanceCategoryId2)
     private int balanceCategoryId;
+
+    public static final String tableName = "withdrawal";
+    public static final String iD = "withdrawal_id";
+    public static final String accountId2 = "account_id";
+    public static final String dateOfWithdrawal2 = "date_of_withdrawal";
+    public static final String  amount2 = "amount";
+    public static final String balanceTypeId2 = "balance_type_id";
+    public static final String balanceCategoryId2 = "balance_category_id";
 
 
 
