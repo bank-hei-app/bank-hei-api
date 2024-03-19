@@ -4,7 +4,7 @@ import java.sql.*;
 
 public class PreparedStatementStep {
     PreparedStatement preparedStatement;
-    private int index = 0;
+    private int index = 1;
 
     public PreparedStatementStep(PreparedStatement preparedStatement) {
         this.preparedStatement = preparedStatement;
@@ -27,13 +27,11 @@ public class PreparedStatementStep {
     };
 
     public PreparedStatementStep addValue(int value) throws SQLException {
-        preparedStatement.setInt(index, value);
-        index++;
+        preparedStatement.setInt(index++, value);
         return this;
     };
     public PreparedStatementStep addValue(String value) throws SQLException {
-        preparedStatement.setString(index, value);
-        index++;
+        preparedStatement.setString(index++, value);
         return this;
     };
 
