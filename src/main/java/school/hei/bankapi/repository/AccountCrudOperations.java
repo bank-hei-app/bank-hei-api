@@ -7,6 +7,9 @@ import school.hei.bankapi.utils.PreparedStatementStep;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Period;
+
 @Repository
 public class AccountCrudOperations extends CrudOperationsImpl<Account> {
 
@@ -26,16 +29,25 @@ public class AccountCrudOperations extends CrudOperationsImpl<Account> {
 
     @Override
     public PreparedStatement createT(PreparedStatementStep pr, Account model) throws SQLException {
-        PreparedStatement preparedStatement = pr.getPreparedStatement();
-        preparedStatement.setInt(1, model.getAccountId());
-        preparedStatement.setString(2, model.getClientName());
-        preparedStatement.setString(3, model.getClientLastName());
-        preparedStatement.setDate(4, new java.sql.Date(model.getDateOfBirth().getTime()));
-        preparedStatement.setDouble(5, model.getNetSalaryPerMonth());
-        preparedStatement.setString(6, model.getAccountNumber());
-        preparedStatement.setInt(7, model.getBankId());
-        preparedStatement.setDouble(8, model.getDefaultSolde());
-        return preparedStatement;
+        if (isClientAboveLegalAge(model.getDateOfBirth())) {
+            PreparedStatement preparedStatement = pr.getPreparedStatement();
+            preparedStatement.setInt(1, model.getAccountId());
+            preparedStatement.setString(2, model.getClientName());
+            preparedStatement.setString(3, model.getClientLastName());
+            preparedStatement.setDate(4, new java.sql.Date(model.getDateOfBirth().getTime()));
+            preparedStatement.setDouble(5, model.getNetSalaryPerMonth());
+            preparedStatement.setString(6, model.getAccountNumber());
+            preparedStatement.setInt(7, model.getBankId());
+            preparedStatement.setDouble(8, model.getDefaultSolde());
+            return preparedStatement;
+        } else {
+            throw new IllegalArgumentException("The customer must be 21 years of age or older to create an account.");
+        }
+    }
+    private boolean isClientAboveLegalAge(java.sql.Date dateOfBirth) {
+        LocalDate birthDate = dateOfBirth.toLocalDate();
+        LocalDate currentDate = LocalDate.now();
+        return Period.between(birthDate, currentDate).getYears() >= 21;
     }
 
     @Override

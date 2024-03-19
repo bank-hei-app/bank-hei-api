@@ -74,7 +74,7 @@ public class Account extends DefaultModel {
         this.clientLastName = clientLastName;
     }
 
-    public Date getDateOfBirth() {
+    public java.sql.Date getDateOfBirth() {
         return dateOfBirth;
     }
 
