@@ -3,6 +3,7 @@ package school.hei.bankapi.repository;
 
 
 
+import org.springframework.stereotype.Repository;
 import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.DefaultModel;
 import school.hei.bankapi.repository.CrudOperations;
@@ -18,7 +19,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+@Repository
 public class CrudOperationsImpl<T extends DefaultModel> implements CrudOperations<T, Integer> {
 
     private static final int finalProposition = 1;
@@ -197,8 +198,6 @@ public class CrudOperationsImpl<T extends DefaultModel> implements CrudOperation
     @Override
     public T update(Integer id) {
         try {
-
-
             T toUpdate = findById(id);
             String sql = String.format(
                     "UPDATE \"%s\" SET ... WHERE \"%s\".\"%s\" = ? ",
