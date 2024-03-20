@@ -1017,8 +1017,18 @@ components:
         net_salary_per_month:
           type: number
           format: double
-      required:
-        - bank_Id
+        account_number:
+          type: string
+        bank_name:
+          type: string
+          enum:
+            - BMOI
+            - Y-BANK
+            - BNI
+            - BOA
+        default_solde:
+          type: integer
+          format: double
 
     AccountInput:
       type: object
@@ -1037,9 +1047,21 @@ components:
           type: number
           format: double
           example: 8000.00
-        bank_Id:
+        account_number: 
+          type: string
+          example: "021_cbjbvjg"
+        bank_name:
+          type: string
+          enum:
+            - BMOI
+            - Y-BANK
+            - BNI
+            - BOA
+          example: BMOI
+        default_solde:
           type: integer
-          example: 1
+          example: 2000.00
+
 
     Bank_transfer:
       type: object
