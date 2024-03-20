@@ -5,7 +5,7 @@ import school.hei.bankapi.utils.annotations.Table;
 
 import java.util.Date;
 @Table(table_name = BankTransfer.tableName, id = BankTransfer.iD)
-public class BankTransfer {
+public class BankTransfer extends DefaultModel {
     @Column(name = BankTransfer.iD)
     private int bankTransferId;
     @Column(name = BankTransfer.amount2)
@@ -32,8 +32,6 @@ public class BankTransfer {
     public static final  String referenceUnique2 = "reference_unique";
 
 
-    public BankTransfer() {
-    }
 
     public BankTransfer(int bankTransferId, double amount, int balanceCategoryId, int balanceTypeId, Date dateMakeEffect, Date dateRegister, String referenceUnique) {
         this.bankTransferId = bankTransferId;
