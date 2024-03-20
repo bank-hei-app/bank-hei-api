@@ -19,8 +19,8 @@ public class Account extends DefaultModel {
     private double netSalaryPerMonth;
     @Column(name = Account.accountNumber2)
     private String accountNumber;
-    @Column(name = Account.bankId2)
-    private int bankId;
+    @Column(name = Account.bankName2)
+    private BankName bankName;
     @Column(name = Account.defaultSolde2)
     private double defaultSolde;
 
@@ -34,18 +34,18 @@ public class Account extends DefaultModel {
     public static final  String dateOfBirth2 = "date_of_birth";
     public static final  String netSalaryPerMonth2 = "net_salary_per_month";
     public static final  String accountNumber2 = "account_number";
-    public static final  String bankId2 = "bank_id";
+    public static final  String bankName2 = "bank_name";
     public static final  String defaultSolde2 = "default_solde";
 
     public Account(int accountId, String clientName, String clientLastName, Date dateOfBirth, double netSalaryPerMonth,
-                   String accountNumber,int bankId , double defaultSolde ) {
+                   String accountNumber,BankName bankName , double defaultSolde ) {
         this.accountId = accountId;
         this.clientName = clientName;
         this.clientLastName = clientLastName;
         this.dateOfBirth = dateOfBirth;
         this.netSalaryPerMonth = netSalaryPerMonth;
         this.accountNumber = accountNumber;
-        this.bankId = bankId;
+        this.bankName = bankName;
         this.defaultSolde = defaultSolde;
 
     }
@@ -74,6 +74,14 @@ public class Account extends DefaultModel {
         this.clientLastName = clientLastName;
     }
 
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
     public java.sql.Date getDateOfBirth() {
         return (java.sql.Date) dateOfBirth;
     }
@@ -98,13 +106,7 @@ public class Account extends DefaultModel {
         this.accountNumber = accountNumber;
     }
 
-    public int getBankId() {
-        return bankId;
-    }
 
-    public void setBankId(int bankId) {
-        this.bankId = bankId;
-    }
 
     public double getDefaultSolde() {
         return defaultSolde;
@@ -123,7 +125,7 @@ public class Account extends DefaultModel {
                 ", dateOfBirth=" + dateOfBirth +
                 ", netSalaryPerMonth=" + netSalaryPerMonth +
                 ", accountNumber='" + accountNumber + '\'' +
-                ", bankId=" + bankId +
+                ", bankName=" + bankName +
                 ", defaultSolde=" + defaultSolde +
                 '}';
     }
