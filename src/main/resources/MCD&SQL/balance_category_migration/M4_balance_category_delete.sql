@@ -1,0 +1,1 @@
+DELETE FROM balance_category WHERE balance_category_id=?;

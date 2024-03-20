@@ -1,0 +1,1 @@
+INSERT INTO account (account_id,client_name,client_last_name,date_of_birth,net_salary_per_month,account_number,bank_id,default_solde) VALUES (?,?,?,?,?,?,?,?);

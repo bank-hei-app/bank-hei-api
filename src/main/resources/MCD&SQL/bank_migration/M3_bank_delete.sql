@@ -1,0 +1,1 @@
+DELETE FROM bank WHERE bank_id=?;
