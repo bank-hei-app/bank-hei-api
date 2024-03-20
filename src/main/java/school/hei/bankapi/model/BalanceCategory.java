@@ -4,7 +4,7 @@ import school.hei.bankapi.utils.annotations.Column;
 import school.hei.bankapi.utils.annotations.Table;
 
 @Table(table_name = BalanceCategory.tableName, id = BalanceCategory.iD)
-public class BalanceCategory {
+public class BalanceCategory extends DefaultModel{
     @Column(name = BalanceCategory.iD)
     private int balanceCategoryId;
     @Column(name = BalanceCategory.balanceCategoryName2)

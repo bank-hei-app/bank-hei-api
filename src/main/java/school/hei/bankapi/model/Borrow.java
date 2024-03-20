@@ -6,7 +6,7 @@ import school.hei.bankapi.utils.annotations.Table;
 
 import java.util.Date;
 @Table(table_name = Borrow.tableName , id = Borrow.iD)
-public class Borrow {
+public class Borrow extends DefaultModel{
     @Column(name = Borrow.iD)
     private int borrowId;
     @Column(name = Borrow.amount2)

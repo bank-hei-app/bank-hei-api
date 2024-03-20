@@ -4,7 +4,7 @@ import school.hei.bankapi.utils.annotations.Column;
 import school.hei.bankapi.utils.annotations.Table;
 
 @Table(table_name = BankTransferHistory.tableName , id = BankTransferHistory.iD)
-public class BankTransferHistory {
+public class BankTransferHistory extends  DefaultModel {
     @Column(name = BankTransferHistory.iD)
     private int bankTransferHistoryId;
     @Column(name = BankTransferHistory.bankTransferId2)
