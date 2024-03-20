@@ -7,7 +7,6 @@ servers:
 tags:
   - name: Account
   - name: Transfer
-  - name: Bank
   - name: TransferList
   - name: TransferHistory
   - name: Borrow
@@ -198,115 +197,7 @@ paths:
                 $ref: '#/components/schemas/Successfully'
         '400':
           $ref: '#/components/responses/400'
-  /bank:
-    get:
-      summary: Retrieve all banks
-      operationId: getAllbanks
-      tags:
-        - Bank
-      responses:
-        '200':
-          description: List of banks retrieved successfully
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Bank'
-    post:
-      summary: Create a new Bank
-      operationId: createBank
-      tags:
-        - Transaction
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Bank'
-      responses:
-        '201':
-          description: Bank created successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Bank'
-        '400':
-          $ref: '#/components/responses/400'
-
-  /bank/{bank_Id}:
-    put:
-      summary: Update a bank by ID
-      operationId: updatebankById
-      tags:
-        - Bank
-      parameters:
-        - in: path
-          name: bank_Id
-          required: true
-          schema:
-            type: string
-          description: The ID of the bank to update
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Bank'
-      responses:
-        '200':
-          description: Bank updated successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Bank'
-        '400':
-          $ref: '#/components/responses/400'
-
-    get:
-      summary: Retrieve a bank by  ID
-      operationId: getBankById
-      tags:
-        - Bank
-      parameters:
-        - in: path
-          name: bank_Id
-          required: true
-          schema:
-            type: string
-          description: The ID of the bank to retrieve
-      responses:
-        '200':
-          description: Bank retrieved successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Bank'
-        '400':
-          $ref: '#/components/responses/400'
-
-    delete:
-      summary: Delete a bank by  ID
-      operationId: deleteBankById
-      tags:
-        - Bank
-      parameters:
-        - in: path
-          name: bank_Id
-          required: true
-          schema:
-            type: string
-          description: The ID of the bank to delete
-      responses:
-        '200':
-          description: Bank deleted successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Successfully'
-        '400':
-          $ref: '#/components/responses/400'
-
+  
   /transferList:
     post:
       summary: Create a new transfer list
@@ -698,7 +589,8 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bank'
+                $ref: '#/components/schemas/Borrow_list'
+                
         '400':
           $ref: '#/components/responses/400'
 
@@ -1165,14 +1057,6 @@ components:
       required:
         - balance_category_Id
         - balance_type_Id
-
-    Bank:
-      type: object
-      properties:
-        bank_Id:
-          type: integer
-        bank_name:
-          type: string
 
     Bank_transfer_list:
       type: object
