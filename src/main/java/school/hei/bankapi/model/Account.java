@@ -75,7 +75,7 @@ public class Account extends DefaultModel {
     }
 
     public java.sql.Date getDateOfBirth() {
-        return dateOfBirth;
+        return (java.sql.Date) dateOfBirth;
     }
 
     public void setDateOfBirth(Date dateOfBirth) {
