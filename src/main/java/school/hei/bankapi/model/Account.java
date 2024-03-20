@@ -74,12 +74,12 @@ public class Account extends DefaultModel {
         this.clientLastName = clientLastName;
     }
 
-    public String getBankName() {
+    public BankName getBankName() {
         return bankName;
     }
 
     public void setBankName(String bankName) {
-        this.bankName = bankName;
+        this.bankName = BankName.valueOf(bankName);
     }
 
     public java.sql.Date getDateOfBirth() {
