@@ -1,0 +1,1 @@
+CREATE TYPE bank_name AS ENUM('BMOI','Y-BANK','BNI','BOA');
