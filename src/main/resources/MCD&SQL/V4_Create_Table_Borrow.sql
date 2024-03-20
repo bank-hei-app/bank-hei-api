@@ -1,5 +1,5 @@
                 CREATE TABLE borrow(
-                       borrow_id int primary key ,
+                       borrow_id serial primary key ,
                        amount double precision,
                        percent decimal,
                        date_of_borrow date

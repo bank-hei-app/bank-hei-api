@@ -1,7 +1,7 @@
 
-                CREATE EXTENSION IF NOT EXISTS "uuid_ossp";
+                CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
                 CREATE TABLE account(
-                        account_id int primary key ,
+                        account_id serial primary key ,
                         client_name varchar(200),
                         client_last_name varchar(200),
                         date_of_birth date,
