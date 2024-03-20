@@ -4,18 +4,27 @@ info:
   version: 1.0.0
 servers:
   - url: https://DBM.com
-tags: 
+tags:
   - name: Account
+  - name: Transfer
+  - name: Bank
+  - name: TransferList
+  - name: TransferHistory
+  - name: Borrow
+  - name: BorrowList
+  - name: BalanceType
+  - name: BalanceCategory
+  - name: Transaction
 paths:
   /account:
     get:
       tags:
         - Account
       summary: Get All accounts
-      description: The Returned books are ordered by name  
+      description: The Returned books are ordered by name
       operationId: getAccounts
       responses:
-        200: 
+        200:
           $ref: '#/components/responses/200'
           content:
             application/json:
@@ -25,10 +34,10 @@ paths:
           $ref: '#/components/responses/400'
         403:
           $ref: '#/components/responses/403'
-                
+
 
     post:
-      tags: 
+      tags:
         - Account
       summary: Create a new Account
       operationId: CreateAccount
@@ -38,49 +47,1037 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AccountInput'
-      responses: 
+      responses:
         '201':
           $ref: '#/components/responses/201'
         '400':
           $ref: '#/components/responses/400'
     put:
-      tags: 
+      tags:
         - Account
       parameters:
         - in: path
           name: account_Id
-          required: true 
-          schema: 
-            type: string 
-      requestBody: 
+          required: true
+          schema:
+            type: string
+      requestBody:
         required: true
         content:
-          application/json: 
-            schema: 
-               $ref: '#/components/schemas/AccountInput'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountInput'
       responses:
-        200: 
+        200:
           description: Account updated successfully
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Account'
-        201: 
+        201:
           description: Account created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
-        400: 
-           $ref: '#/components/responses/400'
-          
+        400:
+          $ref: '#/components/responses/400'
 
+  /transfer:
+    post:
+      summary: Create a new Transfer
+      operationId: createTransfer
+      tags:
+        - Transfer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank_transfer'
+      responses:
+        '201':
+          description: Transfer created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer'
+        '400':
+          $ref: '#/components/responses/400'
+    get:
+      summary: Retrieve a transfer by its ID
+      operationId: getTransferById
+      tags:
+        - Transfer
+      parameters:
+        - in: path
+          name: bank_transfer_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transfer to retrieve
+      responses:
+        '200':
+          description: Transfer retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /transfer/{bank_transfer_Id}:
+    put:
+      summary: update Transfer by Id
+      operationId: updateTransferbyId
+      tags:
+        - Transfer
+      parameters:
+        - in: path
+          name: bank_transfer_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transfer to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank_transfer'
+      responses:
+        200:
+          description: Transfer update successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer'
+        400:
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a transfer by  ID
+      operationId: getTransferById
+      tags:
+        - Transfer
+      parameters:
+        - in: path
+          name: bank_transfer_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transfer to retrieve
+      responses:
+        '200':
+          description: Transfer retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a transfer by its ID
+      operationId: deleteTransferById
+      tags:
+        - Transfer
+      parameters:
+        - in: path
+          name: bank_transfer_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transfer to delete
+      responses:
+        '200':
+          description: Transfer deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+  /bank:
+    get:
+      summary: Retrieve all banks
+      operationId: getAllbanks
+      tags:
+        - Bank
+      responses:
+        '200':
+          description: List of banks retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank'
+    post:
+      summary: Create a new Bank
+      operationId: createBank
+      tags:
+        - Transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank'
+      responses:
+        '201':
+          description: Bank created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /bank/{bank_Id}:
+    put:
+      summary: Update a bank by ID
+      operationId: updatebankById
+      tags:
+        - Bank
+      parameters:
+        - in: path
+          name: bank_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the bank to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank'
+      responses:
+        '200':
+          description: Bank updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a bank by  ID
+      operationId: getBankById
+      tags:
+        - Bank
+      parameters:
+        - in: path
+          name: bank_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the bank to retrieve
+      responses:
+        '200':
+          description: Bank retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a bank by  ID
+      operationId: deleteBankById
+      tags:
+        - Bank
+      parameters:
+        - in: path
+          name: bank_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the bank to delete
+      responses:
+        '200':
+          description: Bank deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /transferList:
+    post:
+      summary: Create a new transfer list
+      operationId: createTransferList
+      tags:
+        - TransferList
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank_transfer_list'
+      responses:
+        '201':
+          description: Transfer group created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_list'
+
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve all transfer list
+      operationId: getAllTransferList
+      tags:
+        - TransferList
+      responses:
+        '200':
+          description: List of transfer list retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank_transfer_list'
+
+  /transfertList/{TransferListId}:
+    put:
+      summary: Update a transfer list by ID
+      operationId: updateTransferListbyId
+      tags:
+        - TransferList
+      parameters:
+        - in: path
+          name: bank_transfer_list_Id
+          required: true
+          schema:
+            type: string
+          description: The Id of the transfer  list to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank_transfer_list'
+      responses:
+        '200':
+          description: Transfer group updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_list'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a transfer list by ID
+      operationId: deleteTransferListById
+      tags:
+        - TransferList
+      parameters:
+        - in: path
+          name: bank_transfer_list_Id
+          required: true
+          schema:
+            type: string
+          description: The Id of transfer to delete
+      responses:
+        '200':
+          description: Transfer list deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a transfer list by its ID
+      operationId: getTransferListById
+      tags:
+        - TransferGroup
+      parameters:
+        - in: path
+          name: bank_transfer_list_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transfer list to retrieve
+      responses:
+        '200':
+          description: Transfer list retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_list'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /transferHistory:
+    get:
+      summary: Retrieve all transferthistorys
+      operationId: getAlltransferhistorys
+      tags:
+        - TransferHistory
+      responses:
+        '200':
+          description: List of transferthistorys retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Bank_transfer_history'
+
+    post:
+      summary: Create a new TransferHistory
+      operationId: createTransferHistory
+      tags:
+        - TransferHistory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank_transfer_history'
+      responses:
+        '201':
+          description: TransferHistory created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_history'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /transferHistory/{bank_transfer_Id}:
+    put:
+      summary: Update a transferthistory by ID
+      operationId: updatetransferhistoryById
+      tags:
+        - TransferHistory
+      parameters:
+        - in: path
+          name: bank_transfer_history_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transferthistory to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Bank_transfer_history'
+      responses:
+        '200':
+          description: TransferHistory updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_history'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a transferthistory by  ID
+      operationId: gettransferhistoryById
+      tags:
+        - TransferHistory
+      parameters:
+        - in: path
+          name: bank_transfer_history_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transferhistory to retrieve
+      responses:
+        '200':
+          description: TransferHistory retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank_transfer_history'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a transferthistory by  ID
+      operationId: deletetransferhistoryById
+      tags:
+        - TransferHistory
+      parameters:
+        - in: path
+          name: bank_transfer_history_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transferhistory to delete
+      responses:
+        '200':
+          description: Transferhistory deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /borrow:
+    get:
+      summary: Retrieve all borrows
+      operationId: getAllbanks
+      tags:
+        - Borrow
+      responses:
+        '200':
+          description: List of borrow retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Borrow'
+    post:
+      summary: Create a new Borrow
+      operationId: createBorrow
+      tags:
+        - Borrow
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Borrow'
+      responses:
+        '201':
+          description: Borrow created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /borrow/{borrow_Id}:
+    put:
+      summary: Update a borrow by ID
+      operationId: updateborrowById
+      tags:
+        - Borrow
+      parameters:
+        - in: path
+          name: borrow_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the borrow to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Borrow'
+      responses:
+        '200':
+          description: Transaction updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a borrow by  ID
+      operationId: getBorriwById
+      tags:
+        - Borrow
+      parameters:
+        - in: path
+          name: borrow_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the borrow to retrieve
+      responses:
+        '200':
+          description: Borrow retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a borrow by  ID
+      operationId: deleteBorrowById
+      tags:
+        - Borrow
+      parameters:
+        - in: path
+          name: borrow_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the borrow to delete
+      responses:
+        '200':
+          description: Borrow deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /borrowList:
+    get:
+      summary: Retrieve all borrolists
+      operationId: getAllborrowlists
+      tags:
+        - BorrowList
+      responses:
+        '200':
+          description: List of banks retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Borrow_list'
+    post:
+      summary: Create a new BorrowList
+      operationId: createBorrowList
+      tags:
+        - BorrowList
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Borrow_list'
+      responses:
+        '201':
+          description: BorrowList created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow_list'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /borrowList/{borrow_list_Id}:
+    put:
+      summary: Update a borrolist by ID
+      operationId: updateborrowlistById
+      tags:
+        - BorrowList
+      parameters:
+        - in: path
+          name: borrow_list_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the borrowList to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Borrow_list'
+      responses:
+        '200':
+          description: BorrowList updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Bank'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a borrolist by  ID
+      operationId: getBorrowListById
+      tags:
+        - BorrowList
+      parameters:
+        - in: path
+          name: borrow_list_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the borrowlist to retrieve
+      responses:
+        '200':
+          description: BorrowList retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrow_list'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a borrolist by  ID
+      operationId: deleteBorrowListById
+      tags:
+        - BorrowList
+      parameters:
+        - in: path
+          name: borrow_list_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the bank to delete
+      responses:
+        '200':
+          description: BorrowList deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /balanceType:
+    get:
+      summary: Retrieve all balancetypes
+      operationId: getAllbalancetypes
+      tags:
+        - BalanceType
+      responses:
+        '200':
+          description: List of balancetypes retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Balance_type'
+    post:
+      summary: Create a new BalanceType
+      operationId: createBalanceType
+      tags:
+        - BalanceType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance_type'
+      responses:
+        '201':
+          description: BalanceType created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_type'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /balanceType/{bank_type_Id}:
+    put:
+      summary: Update a balancetype by ID
+      operationId: updatebalancetypeById
+      tags:
+        - BalanceType
+      parameters:
+        - in: path
+          name: bank_type_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancetype to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance_type'
+      responses:
+        '200':
+          description: Transaction updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_type'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a balancetype by  ID
+      operationId: getbalancetypeById
+      tags:
+        - BalanceType
+      parameters:
+        - in: path
+          name: balance_type_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancetype to retrieve
+      responses:
+        '200':
+          description: BalanceType retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_type'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a balancetype by  ID
+      operationId: deleteBalancetypeById
+      tags:
+        - BalanceType
+      parameters:
+        - in: path
+          name: balance_type_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancetype to delete
+      responses:
+        '200':
+          description: BalanceType deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /Transaction:
+    get:
+      summary: Retrieve all transactions
+      operationId: getAlltransactions
+      tags:
+        - Transaction
+      responses:
+        '200':
+          description: List of transactions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+    post:
+      summary: Create a new Transaction
+      operationId: CreateTransaction
+      tags:
+        - Transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /transaction/{transaction_Id}:
+    put:
+      summary: Update a transaction by ID
+      operationId: updatetransactionById
+      tags:
+        - Transaction
+      parameters:
+        - in: path
+          name: transaction_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transaction to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '200':
+          description: Transaction updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a transaction  by  ID
+      operationId: getTransactionById
+      tags:
+        - Transaction
+      parameters:
+        - in: path
+          name: transaction_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transaction to retrieve
+      responses:
+        '200':
+          description: Transaction retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a transaction by  ID
+      operationId: deleteTransactionById
+      tags:
+        - Transaction
+      parameters:
+        - in: path
+          name: transaction_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transaction to delete
+      responses:
+        '200':
+          description: Transaction deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /balanceCategory:
+    get:
+      summary: Retrieve all balancecategorys
+      operationId: getAllbalancategorys
+      tags:
+        - BalanceCategory
+      responses:
+        '200':
+          description: List of balancecategorys retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Balance_category'
+    post:
+      summary: Create a new BalanceCategory
+      operationId: CreateBalanceCategory
+      tags:
+        - BalanceCategory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance_category'
+      responses:
+        '201':
+          description: BalanceCategory created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_category'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /balanceCategory/{balance_category_Id}:
+    put:
+      summary: Update a balancecategory by ID
+      operationId: updatebalancecategoryById
+      tags:
+        - BalanceCategory
+      parameters:
+        - in: path
+          name: balance_category_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancecategory to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Balance_category'
+      responses:
+        '200':
+          description: BalanceCategory updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_category'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a balancecategory  by  ID
+      operationId: getBalancecategoryById
+      tags:
+        - BalanceCategory
+      parameters:
+        - in: path
+          name: balance_category_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancecategory to retrieve
+      responses:
+        '200':
+          description: BalanceCategory retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Balance_category'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a balancecategory by  ID
+      operationId: deleteBalancecategoryById
+      tags:
+        - BalanceCategory
+      parameters:
+        - in: path
+          name: balance_category_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the balancecategory to delete
+      responses:
+        '200':
+          description: BalanceCategory deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
 
 components:
-  responses: 
+  responses:
     200:
       description: Ok
-      content: 
+      content:
         application/json:
           schema:
             type: array
@@ -88,7 +1085,7 @@ components:
               $ref: '#/components/schemas/Successfully'
     201:
       description: Created
-      content: 
+      content:
         application/json:
           schema:
             type: array
@@ -96,7 +1093,7 @@ components:
               $ref: '#/components/schemas/Successfully'
     400:
       description: Bad Request
-      content: 
+      content:
         application/json:
           schema:
             type: array
@@ -106,12 +1103,13 @@ components:
       description: Forbidden
       content:
         application/json:
-          schema: 
-           type: array
-           items:
-            $ref: '#/components/schemas/Forbidden'
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Forbidden'
 
-  schemas: 
+
+  schemas:
     Account:
       type: object
       properties:
@@ -127,9 +1125,9 @@ components:
         net_salary_per_month:
           type: number
           format: double
-        bank_id: 
-          type: integer
-          
+      required:
+        - bank_Id
+
     AccountInput:
       type: object
       properties:
@@ -137,28 +1135,130 @@ components:
           type: string
           example: 'Fifaliana'
         client_last_name:
-          type: string 
+          type: string
           example: 'Koto'
         date_of_birth:
           type: string
-          format: date 
+          format: date
           example: '2002-03-17'
         net_salary_per_month:
           type: number
           format: double
           example: 8000.00
-        bank_id: 
+        bank_Id:
           type: integer
           example: 1
-        
+
+    Bank_transfer:
+      type: object
+      properties:
+        bank_transfer_Id:
+          type: integer
+        date_make_effect:
+          type: string
+          format: timestamp
+        date_register:
+          type: string
+          format: timestamp
+        reference_unique:
+          type: string
+      required:
+        - balance_category_Id
+        - balance_type_Id
+
+    Bank:
+      type: object
+      properties:
+        bank_Id:
+          type: integer
+        bank_name:
+          type: string
+
+    Bank_transfer_list:
+      type: object
+      properties:
+        bank_transfer_list_Id:
+          type: integer
+        account_sender_Id:
+          type: integer
+        account_recipients_Id:
+          type: integer
+      required:
+        - bank_transfer_Id
+        - account_Id
+
+    Bank_transfer_history:
+      type: object
+      properties:
+        bank_transfer_history_Id:
+          type: integer
+      required:
+        - bank_transfer_Id
+
+    Borrow:
+      type: object
+      properties:
+        borrow_Id:
+          type: integer
+        montant:
+          type: number
+          format: double
+        percent:
+          type: number
+          format: decimal
+        date_of_borrow:
+          type: string
+          format: date
+    Borrow_list:
+      type: object
+      properties:
+        borrow_list_Id:
+          type: integer
+      required:
+        - account_Id
+        - borrow_Id
+
+    Balance_type:
+      type: object
+      properties:
+        balance_type_Id:
+          type: integer
+        balance_type_name:
+          type: string
+
+    Balance_category:
+      type: object
+      properties:
+        balance_category_Id:
+          type: integer
+        balance_category_name:
+          type: string
+        description:
+          type: string
+
+    Transaction:
+      type: object
+      properties:
+        transaction_Id:
+          type: integer
+        date_of_transaction:
+          type: string
+          format: date
+        amount:
+          type: integer
+          format: double
+      required:
+        - account_Id
+        - balance_type_Id
+        - balance_category_Id
 
     ResponseStatus:
       type: object
-      properties: 
-        code: 
+      properties:
+        code:
           type: integer
           example: 200
-        message: 
+        message:
           type: string
           example: ok
     Successfully:
@@ -168,7 +1268,7 @@ components:
           type: string
           description: Returned successfully
         data:
-          type: object 
+          type: object
     ResponseBodyTemplate:
       type: object
       properties:
@@ -183,17 +1283,17 @@ components:
         status:
           code: 400
           message: BAD Request
-        body: {} 
+        body: {}
     Forbidden:
       allOf:
         - $ref: '#/components/schemas/ResponseBodyTemplate'
-      example: 
+      example:
         status:
           code: 403
-          message: FORBIDEN 
+          message: FORBIDEN
         body: {}
 
-       
 
-  
-   
+
+
+
