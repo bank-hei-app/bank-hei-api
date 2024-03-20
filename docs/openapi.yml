@@ -4,26 +4,27 @@ info:
   version: 1.0.0
 servers:
   - url: https://DBM.com
-tags: 
+tags:
   - name: Account
   - name: Transfer
   - name: Bank
-  - name: TransferList 
+  - name: TransferList
   - name: TransferHistory
-  - name: Borrow 
+  - name: Borrow
   - name: BorrowList
-  - name: BalanceType 
+  - name: BalanceType
   - name: BalanceCategory
+  - name: Transaction
 paths:
   /account:
     get:
       tags:
         - Account
       summary: Get All accounts
-      description: The Returned books are ordered by name  
+      description: The Returned books are ordered by name
       operationId: getAccounts
       responses:
-        200: 
+        200:
           $ref: '#/components/responses/200'
           content:
             application/json:
@@ -33,10 +34,10 @@ paths:
           $ref: '#/components/responses/400'
         403:
           $ref: '#/components/responses/403'
-                
+
 
     post:
-      tags: 
+      tags:
         - Account
       summary: Create a new Account
       operationId: CreateAccount
@@ -46,45 +47,45 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/AccountInput'
-      responses: 
+      responses:
         '201':
           $ref: '#/components/responses/201'
         '400':
           $ref: '#/components/responses/400'
     put:
-      tags: 
+      tags:
         - Account
       parameters:
         - in: path
           name: account_Id
-          required: true 
-          schema: 
-            type: string 
-      requestBody: 
+          required: true
+          schema:
+            type: string
+      requestBody:
         required: true
         content:
-          application/json: 
-            schema: 
-               $ref: '#/components/schemas/AccountInput'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountInput'
       responses:
-        200: 
+        200:
           description: Account updated successfully
           content:
             application/json:
-              schema: 
+              schema:
                 $ref: '#/components/schemas/Account'
-        201: 
+        201:
           description: Account created successfully
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Account'
-        400: 
-           $ref: '#/components/responses/400'
-          
+        400:
+          $ref: '#/components/responses/400'
+
   /transfer:
     post:
-      summary: Create a new Transfer 
+      summary: Create a new Transfer
       operationId: createTransfer
       tags:
         - Transfer
@@ -95,7 +96,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Bank_transfer'
       responses:
-        '201':  
+        '201':
           description: Transfer created successfully
           content:
             application/json:
@@ -124,35 +125,35 @@ paths:
                 $ref: '#/components/schemas/Bank_transfer'
         '400':
           $ref: '#/components/responses/400'
-    
-  /transfer/{bank_transfer_Id}:  
-    put: 
-      summary: update Transfer by Id 
+
+  /transfer/{bank_transfer_Id}:
+    put:
+      summary: update Transfer by Id
       operationId: updateTransferbyId
       tags:
         - Transfer
-      parameters: 
+      parameters:
         - in: path
           name: bank_transfer_Id
           required: true
-          schema: 
+          schema:
             type: string
-          description: The ID of the transfer to update 
+          description: The ID of the transfer to update
       requestBody:
         required: true
-        content: 
+        content:
           application/json:
-            schema: 
+            schema:
               $ref: '#/components/schemas/Bank_transfer'
       responses:
         200:
           description: Transfer update successfully
-          content: 
+          content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Bank_transfer' 
+                $ref: '#/components/schemas/Bank_transfer'
         400:
-            $ref: '#/components/responses/400'   
+          $ref: '#/components/responses/400'
 
     get:
       summary: Retrieve a transfer by  ID
@@ -196,7 +197,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Successfully'
         '400':
-          $ref: '#/components/responses/400'  
+          $ref: '#/components/responses/400'
   /bank:
     get:
       summary: Retrieve all banks
@@ -211,7 +212,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Bank'  
+                  $ref: '#/components/schemas/Bank'
     post:
       summary: Create a new Bank
       operationId: createBank
@@ -307,8 +308,8 @@ paths:
           $ref: '#/components/responses/400'
 
   /transferList:
-    post: 
-      summary: Create a new transfer list 
+    post:
+      summary: Create a new transfer list
       operationId: createTransferList
       tags:
         - TransferList
@@ -316,7 +317,7 @@ paths:
         required: true
         content:
           application/json:
-            schema: 
+            schema:
               $ref: '#/components/schemas/Bank_transfer_list'
       responses:
         '201':
@@ -325,12 +326,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Bank_transfer_list'
-                
+
         '400':
           $ref: '#/components/responses/400'
-            
+
     get:
-      summary: Retrieve all transfer list 
+      summary: Retrieve all transfer list
       operationId: getAllTransferList
       tags:
         - TransferList
@@ -343,25 +344,25 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Bank_transfer_list'
-  
+
   /transfertList/{TransferListId}:
     put:
       summary: Update a transfer list by ID
       operationId: updateTransferListbyId
       tags:
-        - TransferList 
+        - TransferList
       parameters:
         - in: path
           name: bank_transfer_list_Id
           required: true
-          schema: 
+          schema:
             type: string
           description: The Id of the transfer  list to update
       requestBody:
-        required: true 
+        required: true
         content:
-          application/json: 
-            schema: 
+          application/json:
+            schema:
               $ref: '#/components/schemas/Bank_transfer_list'
       responses:
         '200':
@@ -371,20 +372,20 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bank_transfer_list'
         '400':
-          $ref: '#/components/responses/400' 
-    
-    delete: 
+          $ref: '#/components/responses/400'
+
+    delete:
       summary: Delete a transfer list by ID
       operationId: deleteTransferListById
       tags:
-        - TransferList 
+        - TransferList
       parameters:
-        - in: path 
+        - in: path
           name: bank_transfer_list_Id
           required: true
           schema:
             type: string
-          description: The Id of transfer to delete 
+          description: The Id of transfer to delete
       responses:
         '200':
           description: Transfer list deleted successfully
@@ -415,7 +416,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Bank_transfer_list'
         '400':
-          $ref: '#/components/responses/400' 
+          $ref: '#/components/responses/400'
 
   /transferHistory:
     get:
@@ -541,7 +542,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Borrow'  
+                  $ref: '#/components/schemas/Borrow'
     post:
       summary: Create a new Borrow
       operationId: createBorrow
@@ -634,8 +635,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Successfully'
         '400':
-          $ref: '#/components/responses/400' 
-  
+          $ref: '#/components/responses/400'
+
   /borrowList:
     get:
       summary: Retrieve all borrolists
@@ -650,7 +651,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Borrow_list'  
+                  $ref: '#/components/schemas/Borrow_list'
     post:
       summary: Create a new BorrowList
       operationId: createBorrowList
@@ -743,7 +744,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Successfully'
         '400':
-          $ref: '#/components/responses/400' 
+          $ref: '#/components/responses/400'
 
   /balanceType:
     get:
@@ -759,7 +760,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Balance_type'  
+                  $ref: '#/components/schemas/Balance_type'
     post:
       summary: Create a new BalanceType
       operationId: createBalanceType
@@ -854,6 +855,115 @@ paths:
         '400':
           $ref: '#/components/responses/400'
 
+  /Transaction:
+    get:
+      summary: Retrieve all transactions
+      operationId: getAlltransactions
+      tags:
+        - Transaction
+      responses:
+        '200':
+          description: List of transactions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+    post:
+      summary: Create a new Transaction
+      operationId: CreateTransaction
+      tags:
+        - Transaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '201':
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          $ref: '#/components/responses/400'
+
+  /transaction/{transaction_Id}:
+    put:
+      summary: Update a transaction by ID
+      operationId: updatetransactionById
+      tags:
+        - Transaction
+      parameters:
+        - in: path
+          name: transaction_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transaction to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Transaction'
+      responses:
+        '200':
+          description: Transaction updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          $ref: '#/components/responses/400'
+
+    get:
+      summary: Retrieve a transaction  by  ID
+      operationId: getTransactionById
+      tags:
+        - Transaction
+      parameters:
+        - in: path
+          name: transaction_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transaction to retrieve
+      responses:
+        '200':
+          description: Transaction retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          $ref: '#/components/responses/400'
+
+    delete:
+      summary: Delete a transaction by  ID
+      operationId: deleteTransactionById
+      tags:
+        - Transaction
+      parameters:
+        - in: path
+          name: transaction_Id
+          required: true
+          schema:
+            type: string
+          description: The ID of the transaction to delete
+      responses:
+        '200':
+          description: Transaction deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Successfully'
+        '400':
+          $ref: '#/components/responses/400'
+
   /balanceCategory:
     get:
       summary: Retrieve all balancecategorys
@@ -868,7 +978,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Balance_category'  
+                  $ref: '#/components/schemas/Balance_category'
     post:
       summary: Create a new BalanceCategory
       operationId: CreateBalanceCategory
@@ -961,14 +1071,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/Successfully'
         '400':
-          $ref: '#/components/responses/400' 
-  
+          $ref: '#/components/responses/400'
 
 components:
-  responses: 
+  responses:
     200:
       description: Ok
-      content: 
+      content:
         application/json:
           schema:
             type: array
@@ -976,7 +1085,7 @@ components:
               $ref: '#/components/schemas/Successfully'
     201:
       description: Created
-      content: 
+      content:
         application/json:
           schema:
             type: array
@@ -984,7 +1093,7 @@ components:
               $ref: '#/components/schemas/Successfully'
     400:
       description: Bad Request
-      content: 
+      content:
         application/json:
           schema:
             type: array
@@ -994,13 +1103,13 @@ components:
       description: Forbidden
       content:
         application/json:
-          schema: 
-           type: array
-           items:
-            $ref: '#/components/schemas/Forbidden' 
-    
-    
-  schemas: 
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Forbidden'
+
+
+  schemas:
     Account:
       type: object
       properties:
@@ -1018,7 +1127,7 @@ components:
           format: double
       required:
         - bank_Id
-          
+
     AccountInput:
       type: object
       properties:
@@ -1026,17 +1135,17 @@ components:
           type: string
           example: 'Fifaliana'
         client_last_name:
-          type: string 
+          type: string
           example: 'Koto'
         date_of_birth:
           type: string
-          format: date 
+          format: date
           example: '2002-03-17'
         net_salary_per_month:
           type: number
           format: double
           example: 8000.00
-        bank_Id: 
+        bank_Id:
           type: integer
           example: 1
 
@@ -1055,16 +1164,16 @@ components:
           type: string
       required:
         - balance_category_Id
-        - balance_type_Id     
+        - balance_type_Id
 
-    Bank: 
+    Bank:
       type: object
       properties:
         bank_Id:
           type: integer
         bank_name:
-          type: string     
-          
+          type: string
+
     Bank_transfer_list:
       type: object
       properties:
@@ -1084,17 +1193,17 @@ components:
         bank_transfer_history_Id:
           type: integer
       required:
-        - bank_transfer_Id 
-    
+        - bank_transfer_Id
+
     Borrow:
       type: object
       properties:
         borrow_Id:
-         type: integer 
+          type: integer
         montant:
           type: number
           format: double
-        percent: 
+        percent:
           type: number
           format: decimal
         date_of_borrow:
@@ -1117,23 +1226,39 @@ components:
         balance_type_name:
           type: string
 
-    Balance_category: 
+    Balance_category:
       type: object
       properties:
-        balance_category_Id: 
+        balance_category_Id:
           type: integer
         balance_category_name:
           type: string
-        description: 
-          type: string      
+        description:
+          type: string
+
+    Transaction:
+      type: object
+      properties:
+        transaction_Id:
+          type: integer
+        date_of_transaction:
+          type: string
+          format: date
+        amount:
+          type: integer
+          format: double
+      required:
+        - account_Id
+        - balance_type_Id
+        - balance_category_Id
 
     ResponseStatus:
       type: object
-      properties: 
-        code: 
+      properties:
+        code:
           type: integer
           example: 200
-        message: 
+        message:
           type: string
           example: ok
     Successfully:
@@ -1143,7 +1268,7 @@ components:
           type: string
           description: Returned successfully
         data:
-          type: object 
+          type: object
     ResponseBodyTemplate:
       type: object
       properties:
@@ -1158,17 +1283,17 @@ components:
         status:
           code: 400
           message: BAD Request
-        body: {} 
+        body: {}
     Forbidden:
       allOf:
         - $ref: '#/components/schemas/ResponseBodyTemplate'
-      example: 
+      example:
         status:
           code: 403
-          message: FORBIDEN 
+          message: FORBIDEN
         body: {}
 
-       
 
-  
-   
+
+
+
