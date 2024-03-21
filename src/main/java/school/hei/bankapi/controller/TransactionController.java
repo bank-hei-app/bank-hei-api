@@ -27,11 +27,11 @@ public class TransactionController {
         return transactionService.findTransactioById(id);
     }
     @PutMapping("/{id}")
-    public Transaction updateTransaction(@PathVariable int id){
-        return transactionService.updateTransaction(id);
+    public Transaction updateTransaction(@PathVariable int id ,@RequestBody Transaction toUpdate){
+        return transactionService.updateTransaction(id,toUpdate);
     }
     @DeleteMapping("/{id}")
-    public Transaction deleteTransaction(@PathVariable int id){
+    public Transaction deleteTransaction(@PathVariable int id ){
         return transactionService.deleteTransaction(id);
     }
 

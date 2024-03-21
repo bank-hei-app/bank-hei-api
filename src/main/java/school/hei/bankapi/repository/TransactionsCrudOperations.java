@@ -123,7 +123,35 @@ public class TransactionsCrudOperations extends CrudOperationsImpl<Transaction>{
     }
 
     @Override
-    public Transaction update(Integer id) {
-        return super.findById(id);
+    public Transaction update(Integer id, Transaction toUpdate) {
+        String sql = "UPDATE " + Transaction.tableName + " SET " +
+                Transaction.accountId2 + " = ?, " +
+                Transaction.dateOfTransaction2 + " = ?, " +
+                Transaction.amount2 + " = ?, " +
+                Transaction.balanceTypeId2 + " = ?, " +
+                Transaction.balanceCategoryId2 + " = ? " +
+                "WHERE " + Transaction.iD + " = ?";
+
+        try (Connection connection = ConnectionConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, toUpdate.getAccountId());
+            preparedStatement.setTimestamp(2, new Timestamp(toUpdate.getDateOfTransaction().getTime()));
+            preparedStatement.setDouble(3, toUpdate.getAmount());
+            preparedStatement.setInt(4, toUpdate.getBalanceTypeId());
+            preparedStatement.setInt(5, toUpdate.getBalanceCategoryId());
+            preparedStatement.setInt(6, id);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected == 1) {
+                return findById(id);
+            } else {
+                throw new SQLException("The update failed.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("An error occurred when updating the Transaction object.", e);
+        }
     }
+
 }

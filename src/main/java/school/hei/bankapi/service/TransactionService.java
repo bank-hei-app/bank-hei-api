@@ -23,6 +23,6 @@ public class TransactionService {
         return transactionsCrudOperations.save(transaction);
     }
     public Transaction findTransactioById(Integer id){return transactionsCrudOperations.findById(id);}
-    public Transaction updateTransaction(Integer id){return transactionsCrudOperations.update(id);}
+    public Transaction updateTransaction(Integer id , Transaction toUpdate){return transactionsCrudOperations.update(id , toUpdate);}
     public Transaction deleteTransaction(Integer id){return transactionsCrudOperations.delete(id);}
 }
