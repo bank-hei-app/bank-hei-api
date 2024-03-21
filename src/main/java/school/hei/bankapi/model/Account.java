@@ -3,7 +3,7 @@ package school.hei.bankapi.model;
 import school.hei.bankapi.utils.annotations.Column;
 import school.hei.bankapi.utils.annotations.Table;
 
-import java.util.Date;
+import java.sql.Date;
 
 @Table(table_name = Account.tableName, id = Account.iD)
 public class Account extends DefaultModel {
