@@ -2,9 +2,7 @@ package school.hei.bankapi.db;
 
 import school.hei.bankapi.exeption.DatabaseConnectionException;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class ConnectionConfig {
     private static final String URL = System.getenv("PG_URL");
@@ -21,4 +19,6 @@ public class ConnectionConfig {
   public static Connection getConnection(){
       return getConnection(URL ,USERNAME , PASSWORD);
   }
+
+
 }
