@@ -1,0 +1,1 @@
+UPDATE balance_category set balance_category_name=?,description=? WHERE balance_category_id=?;
