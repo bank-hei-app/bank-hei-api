@@ -34,23 +34,38 @@ public class TransactionsCrudOperations extends CrudOperationsImpl<Transaction>{
 
        if(table.getBalanceTypeId() == BalanceType.DEBIT.getValue()){
            Connection connection = preparedStatement.getConnection();
-           String updateAccountBalanceQuery = "UPDATE account SET default_solde = default_solde - ? WHERE account_id = ?";
-           PreparedStatement preparedStatement1 = connection.prepareStatement(updateAccountBalanceQuery);
-           preparedStatement1.setDouble(1, table.getAmount());
-           preparedStatement1.setInt(2, table.getAccountId());
-           preparedStatement1.executeUpdate();
+           double accountBalance = getAccountBalance(connection, table.getAccountId());
+
+           if (accountBalance >= table.getAmount()) {
+               String updateAccountBalanceQuery = "UPDATE account SET default_solde = default_solde - ? WHERE account_id = ?";
+
+               PreparedStatement preparedStatement1 = connection.prepareStatement(updateAccountBalanceQuery);
+               preparedStatement1.setDouble(1, table.getAmount());
+               preparedStatement1.setInt(2, table.getAccountId());
+               preparedStatement1.executeUpdate();
+           }else {
+               System.out.println("solde insufficient");
+           }
        }
         if(table.getBalanceTypeId() == BalanceType.CREDIT.getValue()){
             Connection connection = preparedStatement.getConnection();
-            String updateAccountBalanceQuery = "UPDATE account SET default_solde = default_solde + ? WHERE account_id = ?";
-            PreparedStatement preparedStatement1 = connection.prepareStatement(updateAccountBalanceQuery);
-            preparedStatement1.setDouble(1, table.getAmount());
-            preparedStatement1.setInt(2, table.getAccountId());
-            preparedStatement1.executeUpdate();
+            double creditAuthorized = getCreditAuthorized(connection, table.getAccountId());
+
+            if (creditAuthorized == table.getAmount()){
+                String updateAccountBalanceQuery = "UPDATE account SET default_solde = default_solde + ? WHERE account_id = ?";
+                PreparedStatement preparedStatement1 = connection.prepareStatement(updateAccountBalanceQuery);
+                preparedStatement1.setDouble(1, table.getAmount());
+                preparedStatement1.setInt(2, table.getAccountId());
+                preparedStatement1.executeUpdate();
+            }else {
+                System.out.println("Credit unauthorized");
+            }
+
         }
 
        return preparedStatement;
     }
+
     private enum BalanceType {
         DEBIT(1),
         CREDIT(2);
@@ -65,6 +80,33 @@ public class TransactionsCrudOperations extends CrudOperationsImpl<Transaction>{
             return value;
         }
     }
+    private double getAccountBalance(Connection connection, int accountId) throws SQLException {
+        String query = "SELECT default_solde FROM account WHERE account_id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, accountId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getDouble("default_solde");
+                } else {
+                    throw new SQLException("Compte non trouvé.");
+                }
+            }
+        }
+    }
+
+    private double getCreditAuthorized(Connection connection, int accountId) throws SQLException {
+        String query = "SELECT net_salary_per_month FROM account WHERE account_id = ?";
+        try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setInt(1, accountId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getDouble("net_salary_per_month") / 3; // ⅓ du salaire mensuel net
+                } else {
+                    throw new SQLException("Compte non trouvé.");
+                }
+            }
+        }
+   }
     @Override
     public Class<Transaction> getClassT() {
         return Transaction.class;
