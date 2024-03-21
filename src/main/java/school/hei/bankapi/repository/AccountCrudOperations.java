@@ -8,6 +8,7 @@ import school.hei.bankapi.utils.PreparedStatementStep;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.UUID;
@@ -39,7 +40,7 @@ public class AccountCrudOperations extends CrudOperationsImpl<Account> {
             preparedStatement.setDate(4, new java.sql.Date(model.getDateOfBirth().getTime()));
             preparedStatement.setDouble(5, model.getNetSalaryPerMonth());
             preparedStatement.setObject(6, model.getAccountNumber());
-            preparedStatement.setString(7, model.getBankName().name());
+            preparedStatement.setObject(7,model.getBankName() , Types.OTHER);
             preparedStatement.setDouble(8, model.getDefaultSolde());
             return preparedStatement;
         } else {
