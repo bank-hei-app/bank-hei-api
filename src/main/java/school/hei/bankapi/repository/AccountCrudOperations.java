@@ -2,6 +2,7 @@ package school.hei.bankapi.repository;
 
 import org.springframework.stereotype.Repository;
 import school.hei.bankapi.model.Account;
+import school.hei.bankapi.model.BankName;
 import school.hei.bankapi.utils.PreparedStatementStep;
 
 import java.sql.PreparedStatement;
@@ -22,7 +23,7 @@ public class AccountCrudOperations extends CrudOperationsImpl<Account> {
                 resultSet.getDate(Account.dateOfBirth2),
                 resultSet.getDouble(Account.netSalaryPerMonth2),
                 resultSet.getString(Account.accountNumber2),
-                resultSet.getInt(Account.bankId2),
+                BankName.valueOf(resultSet.getString(Account.bankName2)),
                 resultSet.getDouble(Account.defaultSolde2)
         );
     }
@@ -37,7 +38,7 @@ public class AccountCrudOperations extends CrudOperationsImpl<Account> {
             preparedStatement.setDate(4, new java.sql.Date(model.getDateOfBirth().getTime()));
             preparedStatement.setDouble(5, model.getNetSalaryPerMonth());
             preparedStatement.setString(6, model.getAccountNumber());
-            preparedStatement.setInt(7, model.getBankId());
+            preparedStatement.setString(7, model.getBankName().toString());
             preparedStatement.setDouble(8, model.getDefaultSolde());
             return preparedStatement;
         } else {

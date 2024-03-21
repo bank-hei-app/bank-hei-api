@@ -6,6 +6,6 @@
                         date_of_birth date,
                         net_salary_per_month double precision,
                         account_number varchar (50),
-                        bank_id int references bank(bank_id),
+                        bank_name bank_name,
                         default_solde double precision
                 );

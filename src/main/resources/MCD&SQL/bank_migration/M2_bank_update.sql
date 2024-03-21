@@ -1,1 +1,0 @@
-UPDATE bank set name=? WHERE bank_id=?;
