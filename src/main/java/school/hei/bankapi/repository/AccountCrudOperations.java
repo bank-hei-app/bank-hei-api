@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.UUID;
 
 @Repository
 public class AccountCrudOperations extends CrudOperationsImpl<Account> {
@@ -22,7 +23,7 @@ public class AccountCrudOperations extends CrudOperationsImpl<Account> {
                 resultSet.getString(Account.clientLastName2),
                 resultSet.getDate(Account.dateOfBirth2),
                 resultSet.getDouble(Account.netSalaryPerMonth2),
-                resultSet.getString(Account.accountNumber2),
+                UUID.fromString(resultSet.getString(Account.accountNumber2)),
                 BankName.valueOf(resultSet.getString(Account.bankName2)),
                 resultSet.getDouble(Account.defaultSolde2)
         );
@@ -37,14 +38,15 @@ public class AccountCrudOperations extends CrudOperationsImpl<Account> {
             preparedStatement.setString(3, model.getClientLastName());
             preparedStatement.setDate(4, new java.sql.Date(model.getDateOfBirth().getTime()));
             preparedStatement.setDouble(5, model.getNetSalaryPerMonth());
-            preparedStatement.setString(6, model.getAccountNumber());
-            preparedStatement.setString(7, model.getBankName().toString());
+            preparedStatement.setObject(6, model.getAccountNumber());
+            preparedStatement.setString(7, model.getBankName().name());
             preparedStatement.setDouble(8, model.getDefaultSolde());
             return preparedStatement;
         } else {
-            throw new IllegalArgumentException("The customer must be 21 years of age or older to create an account.");
+            throw new IllegalArgumentException("Le client doit être âgé de 21 ans ou plus pour créer un compte.");
         }
     }
+
     private boolean isClientAboveLegalAge(java.sql.Date dateOfBirth) {
         LocalDate birthDate = dateOfBirth.toLocalDate();
         LocalDate currentDate = LocalDate.now();

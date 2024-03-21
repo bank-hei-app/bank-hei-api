@@ -3,7 +3,9 @@ package school.hei.bankapi.model;
 import school.hei.bankapi.utils.annotations.Column;
 import school.hei.bankapi.utils.annotations.Table;
 
-import java.util.Date;
+import java.sql.Date;
+import java.util.UUID;
+
 
 @Table(table_name = Account.tableName, id = Account.iD)
 public class Account extends DefaultModel {
@@ -18,27 +20,24 @@ public class Account extends DefaultModel {
     @Column(name = Account.netSalaryPerMonth2)
     private double netSalaryPerMonth;
     @Column(name = Account.accountNumber2)
-    private String accountNumber;
+    private UUID accountNumber;
     @Column(name = Account.bankName2)
     private BankName bankName;
     @Column(name = Account.defaultSolde2)
     private double defaultSolde;
 
-
-
-
     public static final String tableName = "account";
     public static final String iD = "account_id";
-    public static final  String clientName2 = "client_name";
-    public static final  String clientLastName2 = "client_last_name";
-    public static final  String dateOfBirth2 = "date_of_birth";
-    public static final  String netSalaryPerMonth2 = "net_salary_per_month";
-    public static final  String accountNumber2 = "account_number";
-    public static final  String bankName2 = "bank_name";
-    public static final  String defaultSolde2 = "default_solde";
+    public static final String clientName2 = "client_name";
+    public static final String clientLastName2 = "client_last_name";
+    public static final String dateOfBirth2 = "date_of_birth";
+    public static final String netSalaryPerMonth2 = "net_salary_per_month";
+    public static final String accountNumber2 = "account_number";
+    public static final String bankName2 = "bank_name";
+    public static final String defaultSolde2 = "default_solde";
 
     public Account(int accountId, String clientName, String clientLastName, Date dateOfBirth, double netSalaryPerMonth,
-                   String accountNumber,BankName bankName , double defaultSolde ) {
+                   UUID accountNumber, BankName bankName, double defaultSolde) {
         this.accountId = accountId;
         this.clientName = clientName;
         this.clientLastName = clientLastName;
@@ -47,7 +46,6 @@ public class Account extends DefaultModel {
         this.accountNumber = accountNumber;
         this.bankName = bankName;
         this.defaultSolde = defaultSolde;
-
     }
 
     public int getAccountId() {
@@ -79,7 +77,7 @@ public class Account extends DefaultModel {
     }
 
     public void setBankName(String bankName) {
-        this.bankName = BankName.valueOf(bankName);
+        this.bankName = BankName.valueOf(String.valueOf(BankName.valueOf(bankName)));
     }
 
     public java.sql.Date getDateOfBirth() {
@@ -98,14 +96,13 @@ public class Account extends DefaultModel {
         this.netSalaryPerMonth = netSalaryPerMonth;
     }
 
-    public String getAccountNumber() {
+    public UUID getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
+    public void setAccountNumber(UUID accountNumber) {
         this.accountNumber = accountNumber;
     }
-
 
 
     public double getDefaultSolde() {
