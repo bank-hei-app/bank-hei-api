@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.DefaultModel;
 import school.hei.bankapi.repository.CrudOperations;
+import school.hei.bankapi.utils.ColumnType;
 import school.hei.bankapi.utils.PreparedStatementStep;
 import school.hei.bankapi.utils.annotations.Column;
 import school.hei.bankapi.utils.annotations.Table;
@@ -196,25 +197,37 @@ public class CrudOperationsImpl<T extends DefaultModel> implements CrudOperation
 
 
     @Override
-    public T update(Integer id) {
+    public T update(Integer id, T toUpdate) {
         try {
-            T toUpdate = findById(id);
             String sql = String.format(
-                    "UPDATE \"%s\" SET ... WHERE \"%s\".\"%s\" = ? ",
-                    getTableName(),
-                    getTableName(),
-                    getId()
+                    "UPDATE \"%s\" SET ",
+                    getTableName()
             );
+            List<String> columns = getListColumn();
+            for (String column : columns) {
+                sql += "\"" + column + "\" = ?, ";
+            }
+            sql = sql.substring(0, sql.length() - 2);
+            sql += String.format(" WHERE \"%s\" = ?", getId());
             PreparedStatementStep pr = new PreparedStatementStep(ConnectionConfig.getConnection().prepareStatement(sql));
+            int index = 1;
+            for (String column : columns) {
+                Method getterMethod = getClassT().getMethod("get" + column.substring(0, 1).toUpperCase() + column.substring(1));
+                pr.addValues(getterMethod.invoke(toUpdate), ColumnType.STRING);
+                index++;
+            }
             pr.addValue(id);
+
             int result = pr.getPreparedStatement().executeUpdate();
             if (result == 1) {
                 return toUpdate;
             }
-        } catch (SQLException e){
-            throw new RuntimeException();
+        } catch (SQLException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            throw new RuntimeException(e);
         }
         return null;
     }
+
+
 }
 

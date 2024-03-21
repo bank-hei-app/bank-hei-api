@@ -35,7 +35,7 @@ public class AccountService {
         return accountCrudOperations.delete(id);
     }
 
-    public Account updateAccount(Integer id) {
-        return accountCrudOperations.update(id);
+    public Account updateAccount(Integer id , Account toUpdate) {
+        return accountCrudOperations.update(id , toUpdate);
     }
 }

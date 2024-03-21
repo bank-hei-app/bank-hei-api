@@ -1,20 +1,18 @@
 package school.hei.bankapi.repository;
 
 import org.springframework.stereotype.Repository;
+import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.Account;
 import school.hei.bankapi.model.BankName;
 import school.hei.bankapi.utils.PreparedStatementStep;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Types;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.UUID;
 
 @Repository
-public class AccountCrudOperations extends CrudOperationsImpl<Account> {
+public class AccountCrudOperations extends CrudOperationsImpl<Account > {
 
     @Override
     public Account createT(ResultSet resultSet) throws SQLException {
@@ -69,8 +67,35 @@ public class AccountCrudOperations extends CrudOperationsImpl<Account> {
         return super.delete(id);
     }
 
+
+
     @Override
-    public Account update(Integer id) {
-        return super.findById(id);
+    public Account update(Integer id, Account toUpdate) {
+        String sql = "UPDATE account SET client_name=?, client_last_name=?, date_of_birth=?, net_salary_per_month=?, " +
+                "account_number=?, bank_name=?, default_solde=? WHERE account_id=?";
+
+        try (Connection connection = ConnectionConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, toUpdate.getClientName());
+            preparedStatement.setString(2, toUpdate.getClientLastName());
+            preparedStatement.setDate(3, toUpdate.getDateOfBirth());
+            preparedStatement.setDouble(4, toUpdate.getNetSalaryPerMonth());
+            preparedStatement.setObject(5, toUpdate.getAccountNumber());
+            preparedStatement.setObject(6, toUpdate.getBankName(), Types.OTHER);
+            preparedStatement.setDouble(7, toUpdate.getDefaultSolde());
+            preparedStatement.setInt(8, id);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected == 1) {
+                return findById(id);
+            } else {
+                throw new SQLException("The update failed.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("An error occurred when updating the Account object.", e);
+        }
     }
+
 }
