@@ -1,5 +1,9 @@
 package school.hei.bankapi.utils;
+import school.hei.bankapi.model.BankName;
+
 import java.sql.*;
+
+import static java.sql.Types.DOUBLE;
 
 
 public class PreparedStatementStep {
@@ -21,6 +25,9 @@ public class PreparedStatementStep {
             case STRING -> {
                 return addValue((String) value);
             }
+            case DATE -> {
+                return addValue(String.valueOf((Date) value));
+            }
 
         }
         return null;
@@ -35,4 +42,13 @@ public class PreparedStatementStep {
         return this;
     };
 
+    public PreparedStatementStep addValue(double value) throws SQLException {
+        preparedStatement.setDouble(index++, value);
+        return this;
+    }
+
+    public PreparedStatementStep addValue(Date value) throws SQLException {
+        preparedStatement.setDate(index++, value);
+        return this;
+    }
 }

@@ -80,7 +80,7 @@ public class Account extends DefaultModel {
         this.bankName = BankName.valueOf(String.valueOf(BankName.valueOf(bankName)));
     }
 
-    public java.sql.Date getDateOfBirth() {
+    public Date getDateOfBirth() {
         return (java.sql.Date) dateOfBirth;
     }
 
