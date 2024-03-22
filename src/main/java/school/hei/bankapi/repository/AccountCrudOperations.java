@@ -68,14 +68,17 @@ public class AccountCrudOperations extends CrudOperationsImpl<Account > {
     }
 
 
-
     @Override
     public Account update(Integer id, Account toUpdate) {
         String sql = "UPDATE account SET client_name=?, client_last_name=?, date_of_birth=?, net_salary_per_month=?, " +
                 "account_number=?, bank_name=?, default_solde=? WHERE account_id=?";
 
-        try (Connection connection = ConnectionConfig.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = ConnectionConfig.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setString(1, toUpdate.getClientName());
             preparedStatement.setString(2, toUpdate.getClientLastName());
@@ -95,7 +98,19 @@ public class AccountCrudOperations extends CrudOperationsImpl<Account > {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("An error occurred when updating the Account object.", e);
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
+
 
 }
