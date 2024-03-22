@@ -36,8 +36,12 @@ public class BankTransferCrudOperations {
     }
 
     public void transferMoney(Account sender, Account receiver, double amount) {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
         if (sender.getDefaultSolde() >= amount && amount > 0) {
-            try (Connection connection = ConnectionConfig.getConnection()) {
+            try {
+                connection = ConnectionConfig.getConnection();
                 String senderBankName = getBankName(connection, sender.getAccountId());
                 String receiverBankName = getBankName(connection, receiver.getAccountId());
 
@@ -48,6 +52,17 @@ public class BankTransferCrudOperations {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    if (statement != null) {
+                        statement.close();
+                    }
+                    if (connection != null) {
+                        connection.close();
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
         } else {
             throw new RuntimeException("Balance Insufficient");
@@ -55,24 +70,44 @@ public class BankTransferCrudOperations {
     }
 
     private String getBankName(Connection connection, int accountId) throws SQLException {
+        PreparedStatement statement = null;
         String query = "SELECT bank_name FROM account WHERE account_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
+        try {
+            statement = connection.prepareStatement(query);
             statement.setInt(1, accountId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     return resultSet.getString("bank_name");
                 }
             }
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
         throw new SQLException("Account not found");
     }
 
     private void executeCreditTransfer(Connection connection, int receiverAccountId, double amount) throws SQLException {
+        PreparedStatement statement = null;
         String sql = "UPDATE account SET default_solde = default_solde + ? WHERE account_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try {
+            statement = connection.prepareStatement(sql);
             statement.setDouble(1, amount);
             statement.setInt(2, receiverAccountId);
             statement.executeUpdate();
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -83,7 +118,10 @@ public class BankTransferCrudOperations {
         }
     }
 
+
     public void executeDebits() {
+        Connection connection = null;
+        PreparedStatement statement = null;
         LocalDateTime now = LocalDateTime.now();
         synchronized (debitRequests) {
             debitRequests.entrySet().removeIf(entry -> now.minusHours(48).isAfter(entry.getValue()));
@@ -91,20 +129,32 @@ public class BankTransferCrudOperations {
                 int accountId = entry.getKey();
                 LocalDateTime requestTime = entry.getValue();
                 if (now.minusHours(48).isAfter(requestTime)) {
-                    try (Connection connection = ConnectionConfig.getConnection()) {
+                    try {
+                        connection = ConnectionConfig.getConnection();
                         String sql = "UPDATE account SET default_solde = default_solde - ? WHERE account_id = ?";
-                        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                            statement.setDouble(1, 0.0);
-                            statement.setInt(2, accountId);
-                            statement.executeUpdate();
-                            System.out.println("Debit executed for account " + accountId);
-                        }
+                        statement = connection.prepareStatement(sql);
+                        statement.setDouble(1, 0.0);
+                        statement.setInt(2, accountId);
+                        statement.executeUpdate();
+                        System.out.println("Debit executed for account " + accountId);
                     } catch (SQLException e) {
                         e.printStackTrace();
+                    } finally {
+                        try {
+                            if (statement != null) {
+                                statement.close();
+                            }
+                            if (connection != null) {
+                                connection.close();
+                            }
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
                     }
                     debitRequests.remove(accountId);
                 }
             }
         }
     }
+
 }
