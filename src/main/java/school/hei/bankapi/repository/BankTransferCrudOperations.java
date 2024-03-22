@@ -2,13 +2,14 @@ package school.hei.bankapi.repository;
 
 import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.Account;
+import school.hei.bankapi.model.BankTransfer;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BankTransferCrudOperations {
+public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer> {
     private Map<Integer, LocalDateTime> debitRequests = new HashMap<>();
     public void supplyBalance(double montant, int balanceCategoryId, int balanceTypeId, Date dateMakeEffect, Date dateRegister, String referenceUnique) throws SQLException {
         Connection connection = null;
@@ -157,4 +158,18 @@ public class BankTransferCrudOperations {
         }
     }
 
+    @Override
+    public BankTransfer delete(Integer id) {
+        String sql = "DELETE FROM bank_transfer WHERE bank_transfer_id = ?";
+
+        try (Connection connection = ConnectionConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
