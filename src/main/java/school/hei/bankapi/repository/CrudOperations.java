@@ -15,4 +15,5 @@ public interface CrudOperations<T extends DefaultModel, ID> {
     T findById(ID id);
     T delete(ID id);
     T update(ID id , T toUpdate);
+
 }

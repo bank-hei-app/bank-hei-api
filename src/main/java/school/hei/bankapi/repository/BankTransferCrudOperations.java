@@ -2,15 +2,46 @@ package school.hei.bankapi.repository;
 
 import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.Account;
+import school.hei.bankapi.model.BankName;
 import school.hei.bankapi.model.BankTransfer;
+import school.hei.bankapi.utils.PreparedStatementStep;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer> {
     private Map<Integer, LocalDateTime> debitRequests = new HashMap<>();
+
+    @Override
+    public BankTransfer createT(ResultSet resultSet) throws SQLException {
+        return new BankTransfer(
+                resultSet.getInt(BankTransfer.iD),
+                resultSet.getDouble(BankTransfer.amount2),
+                resultSet.getInt(BankTransfer.balanceCategoryId2),
+                resultSet.getInt(BankTransfer.balanceTypeId2),
+                resultSet.getDate(BankTransfer.dateMakeEffect2),
+                resultSet.getDate(BankTransfer.dateRegister2),
+                resultSet.getString(BankTransfer.referenceUnique2)
+        );
+    }
+
+    @Override
+    public PreparedStatement createT(PreparedStatementStep pr, BankTransfer model) throws SQLException {
+        PreparedStatement preparedStatement = pr.getPreparedStatement();
+        preparedStatement.setInt(1, model.getBankTransferId());
+        preparedStatement.setDouble(2, model.getAmount());
+        preparedStatement.setInt(3, model.getBalanceCategoryId());
+        preparedStatement.setInt(4, model.getBalanceTypeId());
+        preparedStatement.setDate(5, model.getDateMakeEffect());
+        preparedStatement.setDate(6, model.getDateRegister());
+        preparedStatement.setString(7, model.getReferenceUnique());
+        return preparedStatement;
+    }
+
+
     public void supplyBalance(double montant, int balanceCategoryId, int balanceTypeId, Date dateMakeEffect, Date dateRegister, String referenceUnique) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
@@ -119,6 +150,15 @@ public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer>
         }
     }
 
+    @Override
+    public Class<BankTransfer> getClassT() {
+        return BankTransfer.class;
+    }
+
+    @Override
+    public BankTransfer findById(Integer id) {
+        return super.findById(id);
+    }
 
     public void executeDebits() {
         Connection connection = null;
