@@ -1,9 +1,11 @@
 package school.hei.bankapi.repository;
 
+import org.springframework.stereotype.Repository;
 import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.Account;
 import school.hei.bankapi.model.BankName;
 import school.hei.bankapi.model.BankTransfer;
+import school.hei.bankapi.repository.CrudOperationsImpl;
 import school.hei.bankapi.utils.PreparedStatementStep;
 
 import java.sql.*;
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+@Repository
 
 public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer> {
     private Map<Integer, LocalDateTime> debitRequests = new HashMap<>();
@@ -212,4 +215,47 @@ public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer>
         }
         return null;
     }
+
+
+    @Override
+    public BankTransfer update(Integer id, BankTransfer toUpdate) {
+        String sql = "UPDATE bank_transfer SET amount=?, balance_category_id=?, balance_type_id=?, " +
+                "date_make_effect=?, date_register=?, reference_unique=? WHERE bank_transfer_id=?";
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = ConnectionConfig.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setDouble(1, toUpdate.getAmount());
+            preparedStatement.setInt(2, toUpdate.getBalanceCategoryId());
+            preparedStatement.setInt(3, toUpdate.getBalanceTypeId());
+            preparedStatement.setDate(4, toUpdate.getDateMakeEffect());
+            preparedStatement.setDate(5, toUpdate.getDateRegister());
+            preparedStatement.setString(6, toUpdate.getReferenceUnique());
+            preparedStatement.setInt(7, id);
+
+            preparedStatement.executeUpdate();
+
+
+
+            return findById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
 }
