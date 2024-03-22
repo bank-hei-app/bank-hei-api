@@ -3,16 +3,37 @@ package school.hei.bankapi.repository;
 import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.Account;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
 public class BankTransferCrudOperations {
     private Map<Integer, LocalDateTime> debitRequests = new HashMap<>();
+    public void supplyBalance(double montant, int balanceCategoryId, int balanceTypeId, Date dateMakeEffect, Date dateRegister, String referenceUnique) throws SQLException {
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        try {
+            connection = ConnectionConfig.getConnection();
+            String query = "INSERT INTO bank_transfer (amount, balance_category_id, balance_type_id, date_make_effect, date_register, reference_unique) VALUES (?, ?, ?, ?, ?, ?)";
+            statement = connection.prepareStatement(query);
+            statement.setDouble(1, montant);
+            statement.setInt(2, balanceCategoryId);
+            statement.setInt(3, balanceTypeId);
+            statement.setDate(4, new java.sql.Date(dateMakeEffect.getTime()));
+            statement.setDate(5, new java.sql.Date(dateRegister.getTime()));
+            statement.setString(6, referenceUnique);
+            statement.executeUpdate();
+        } finally {
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        }
+    }
 
     public void transferMoney(Account sender, Account receiver, double amount) {
         if (sender.getDefaultSolde() >= amount && amount > 0) {
