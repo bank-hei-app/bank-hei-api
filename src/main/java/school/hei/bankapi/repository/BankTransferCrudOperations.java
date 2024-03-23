@@ -1,15 +1,50 @@
 package school.hei.bankapi.repository;
 
+import org.springframework.stereotype.Repository;
 import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.Account;
+import school.hei.bankapi.model.BankName;
+import school.hei.bankapi.model.BankTransfer;
+import school.hei.bankapi.repository.CrudOperationsImpl;
+import school.hei.bankapi.utils.PreparedStatementStep;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+@Repository
 
-public class BankTransferCrudOperations {
+public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer> {
     private Map<Integer, LocalDateTime> debitRequests = new HashMap<>();
+
+    @Override
+    public BankTransfer createT(ResultSet resultSet) throws SQLException {
+        return new BankTransfer(
+                resultSet.getInt(BankTransfer.iD),
+                resultSet.getDouble(BankTransfer.amount2),
+                resultSet.getInt(BankTransfer.balanceCategoryId2),
+                resultSet.getInt(BankTransfer.balanceTypeId2),
+                resultSet.getDate(BankTransfer.dateMakeEffect2),
+                resultSet.getDate(BankTransfer.dateRegister2),
+                resultSet.getString(BankTransfer.referenceUnique2)
+        );
+    }
+
+    @Override
+    public PreparedStatement createT(PreparedStatementStep pr, BankTransfer model) throws SQLException {
+        PreparedStatement preparedStatement = pr.getPreparedStatement();
+        preparedStatement.setInt(1, model.getBankTransferId());
+        preparedStatement.setDouble(2, model.getAmount());
+        preparedStatement.setInt(3, model.getBalanceCategoryId());
+        preparedStatement.setInt(4, model.getBalanceTypeId());
+        preparedStatement.setDate(5, model.getDateMakeEffect());
+        preparedStatement.setDate(6, model.getDateRegister());
+        preparedStatement.setString(7, model.getReferenceUnique());
+        return preparedStatement;
+    }
+
+
     public void supplyBalance(double montant, int balanceCategoryId, int balanceTypeId, Date dateMakeEffect, Date dateRegister, String referenceUnique) throws SQLException {
         Connection connection = null;
         PreparedStatement statement = null;
@@ -118,6 +153,15 @@ public class BankTransferCrudOperations {
         }
     }
 
+    @Override
+    public Class<BankTransfer> getClassT() {
+        return BankTransfer.class;
+    }
+
+    @Override
+    public BankTransfer findById(Integer id) {
+        return super.findById(id);
+    }
 
     public void executeDebits() {
         Connection connection = null;
@@ -153,6 +197,63 @@ public class BankTransferCrudOperations {
                     }
                     debitRequests.remove(accountId);
                 }
+            }
+        }
+    }
+
+    @Override
+    public BankTransfer delete(Integer id) {
+        String sql = "DELETE FROM bank_transfer WHERE bank_transfer_id = ?";
+
+        try (Connection connection = ConnectionConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+
+    @Override
+    public BankTransfer update(Integer id, BankTransfer toUpdate) {
+        String sql = "UPDATE bank_transfer SET amount=?, balance_category_id=?, balance_type_id=?, " +
+                "date_make_effect=?, date_register=?, reference_unique=? WHERE bank_transfer_id=?";
+
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+        try {
+            connection = ConnectionConfig.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setDouble(1, toUpdate.getAmount());
+            preparedStatement.setInt(2, toUpdate.getBalanceCategoryId());
+            preparedStatement.setInt(3, toUpdate.getBalanceTypeId());
+            preparedStatement.setDate(4, toUpdate.getDateMakeEffect());
+            preparedStatement.setDate(5, toUpdate.getDateRegister());
+            preparedStatement.setString(6, toUpdate.getReferenceUnique());
+            preparedStatement.setInt(7, id);
+
+            preparedStatement.executeUpdate();
+
+
+
+            return findById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        } finally {
+            try {
+                if (preparedStatement != null) {
+                    preparedStatement.close();
+                }
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
     }

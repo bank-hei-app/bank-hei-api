@@ -3,7 +3,7 @@ package school.hei.bankapi.model;
 import school.hei.bankapi.utils.annotations.Column;
 import school.hei.bankapi.utils.annotations.Table;
 
-import java.util.Date;
+import java.sql.Date;
 @Table(table_name = BankTransfer.tableName, id = BankTransfer.iD)
 public class BankTransfer extends DefaultModel {
     @Column(name = BankTransfer.iD)
@@ -75,16 +75,16 @@ public class BankTransfer extends DefaultModel {
         this.balanceTypeId = balanceTypeId;
     }
 
-    public Date getDateMakeEffect() {
-        return dateMakeEffect;
+    public java.sql.Date getDateMakeEffect() {
+        return (java.sql.Date) dateMakeEffect;
     }
 
     public void setDateMakeEffect(Date dateMakeEffect) {
         this.dateMakeEffect = dateMakeEffect;
     }
 
-    public Date getDateRegister() {
-        return dateRegister;
+    public java.sql.Date getDateRegister() {
+        return (java.sql.Date) dateRegister;
     }
 
     public void setDateRegister(Date dateRegister) {
