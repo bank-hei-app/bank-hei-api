@@ -3,20 +3,18 @@ package school.hei.bankapi.repository;
 import org.springframework.stereotype.Repository;
 import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.Account;
-import school.hei.bankapi.model.BankName;
 import school.hei.bankapi.model.BankTransfer;
-import school.hei.bankapi.repository.CrudOperationsImpl;
 import school.hei.bankapi.utils.PreparedStatementStep;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
+
 @Repository
 
 public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer> {
-    private Map<Integer, LocalDateTime> debitRequests = new HashMap<>();
+
 
     @Override
     public BankTransfer createT(ResultSet resultSet) throws SQLException {
@@ -29,19 +27,6 @@ public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer>
                 resultSet.getDate(BankTransfer.dateRegister2),
                 resultSet.getString(BankTransfer.referenceUnique2)
         );
-    }
-
-    @Override
-    public PreparedStatement createT(PreparedStatementStep pr, BankTransfer model) throws SQLException {
-        PreparedStatement preparedStatement = pr.getPreparedStatement();
-        preparedStatement.setInt(1, model.getBankTransferId());
-        preparedStatement.setDouble(2, model.getAmount());
-        preparedStatement.setInt(3, model.getBalanceCategoryId());
-        preparedStatement.setInt(4, model.getBalanceTypeId());
-        preparedStatement.setDate(5, model.getDateMakeEffect());
-        preparedStatement.setDate(6, model.getDateRegister());
-        preparedStatement.setString(7, model.getReferenceUnique());
-        return preparedStatement;
     }
 
 
@@ -70,20 +55,19 @@ public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer>
         }
     }
 
-    public void transferMoney(Account sender, Account receiver, double amount) {
+    public void transferMoney(Account sender, Account receiver , Double amount) {
         Connection connection = null;
         PreparedStatement statement = null;
 
-        if (sender.getDefaultSolde() >= amount && amount > 0) {
+        if (sender.getDefaultSolde()  > 0  || sender.getDefaultSolde() >= amount) {
             try {
                 connection = ConnectionConfig.getConnection();
                 String senderBankName = getBankName(connection, sender.getAccountId());
                 String receiverBankName = getBankName(connection, receiver.getAccountId());
 
                 if (senderBankName.equals(receiverBankName)) {
-                    executeCreditTransfer(connection, receiver.getAccountId(), amount);
-                } else {
-                    debitAccount(sender.getAccountId(), amount);
+                    executeCreditTransferSameBankName(connection, receiver );
+                    executeDebitTransferSameBankName(connection,sender);
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -103,6 +87,7 @@ public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer>
             throw new RuntimeException("Balance Insufficient");
         }
     }
+
 
     private String getBankName(Connection connection, int accountId) throws SQLException {
         PreparedStatement statement = null;
@@ -127,32 +112,25 @@ public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer>
         throw new SQLException("Account not found");
     }
 
-    private void executeCreditTransfer(Connection connection, int receiverAccountId, double amount) throws SQLException {
-        PreparedStatement statement = null;
+
+
+    private void executeCreditTransferSameBankName(Connection connection, Account receiver) throws SQLException {
         String sql = "UPDATE account SET default_solde = default_solde + ? WHERE account_id = ?";
-        try {
-            statement = connection.prepareStatement(sql);
-            statement.setDouble(1, amount);
-            statement.setInt(2, receiverAccountId);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, receiver.getAccountId());
             statement.executeUpdate();
-        } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+        }
+    }
+    private void executeDebitTransferSameBankName(Connection connection, Account sender) throws SQLException {
+        String sql = "UPDATE account SET default_solde = default_solde - ? WHERE account_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, sender.getAccountId());
+            statement.executeUpdate();
         }
     }
 
-    private void debitAccount(int senderAccountId, double amount) {
-        synchronized (debitRequests) {
-            debitRequests.put(senderAccountId, LocalDateTime.now());
-            System.out.println("Debit of " + amount + " requested for account " + senderAccountId);
-        }
-    }
 
+    
     @Override
     public Class<BankTransfer> getClassT() {
         return BankTransfer.class;
@@ -162,45 +140,7 @@ public class BankTransferCrudOperations extends CrudOperationsImpl<BankTransfer>
     public BankTransfer findById(Integer id) {
         return super.findById(id);
     }
-
-    public void executeDebits() {
-        Connection connection = null;
-        PreparedStatement statement = null;
-        LocalDateTime now = LocalDateTime.now();
-        synchronized (debitRequests) {
-            debitRequests.entrySet().removeIf(entry -> now.minusHours(48).isAfter(entry.getValue()));
-            for (Map.Entry<Integer, LocalDateTime> entry : debitRequests.entrySet()) {
-                int accountId = entry.getKey();
-                LocalDateTime requestTime = entry.getValue();
-                if (now.minusHours(48).isAfter(requestTime)) {
-                    try {
-                        connection = ConnectionConfig.getConnection();
-                        String sql = "UPDATE account SET default_solde = default_solde - ? WHERE account_id = ?";
-                        statement = connection.prepareStatement(sql);
-                        statement.setDouble(1, 0.0);
-                        statement.setInt(2, accountId);
-                        statement.executeUpdate();
-                        System.out.println("Debit executed for account " + accountId);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            if (statement != null) {
-                                statement.close();
-                            }
-                            if (connection != null) {
-                                connection.close();
-                            }
-                        } catch (SQLException ex) {
-                            ex.printStackTrace();
-                        }
-                    }
-                    debitRequests.remove(accountId);
-                }
-            }
-        }
-    }
-
+    
     @Override
     public BankTransfer delete(Integer id) {
         String sql = "DELETE FROM bank_transfer WHERE bank_transfer_id = ?";
