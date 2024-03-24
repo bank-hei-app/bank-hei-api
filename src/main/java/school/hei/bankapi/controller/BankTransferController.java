@@ -45,10 +45,7 @@ public class BankTransferController {
         bankTransferService.transferMoney(sender, receiver, amount);
     }
 
-    @PostMapping("/execute-debits")
-    public void executeDebits() {
-        bankTransferService.executeDebits();
-    }
+
 
     @DeleteMapping("/{id}")
     public BankTransfer deleteBankTransfer(@PathVariable Integer id) {
