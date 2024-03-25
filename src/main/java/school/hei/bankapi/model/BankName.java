@@ -4,6 +4,6 @@ public enum BankName {
     BMOI,
     BNI,
     BOA,
-    Y_BANK;
+    BANKEO;
 
 }

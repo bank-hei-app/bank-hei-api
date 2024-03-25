@@ -1,4 +1,4 @@
-                CREATE TABLE balance_type(
-                             balance_type_id int primary key ,
-                             balance_type_name varchar(200)
-                );
+CREATE TABLE IF NOT EXISTS balance_type(
+     balance_type_id int PRIMARY KEY,
+     balance_type_name varchar(200)
+    );

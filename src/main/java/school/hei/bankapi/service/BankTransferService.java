@@ -40,9 +40,6 @@ public class BankTransferService {
         ((BankTransferCrudOperations) bankTransferCrudOperations).transferMoney(sender, receiver, amount);
     }
 
-    public void executeDebits() {
-        ((BankTransferCrudOperations) bankTransferCrudOperations).executeDebits();
-    }
 
     public BankTransfer deleteBankTransfer(Integer id) {
         return bankTransferCrudOperations.delete(id);

@@ -1,5 +1,5 @@
-                CREATE TABLE borrow_list(
-                            borrow_list_id serial primary key ,
-                            account_id serial references account(account_id),
-                            borrow_id serial references borrow(borrow_id)
-                );
+CREATE TABLE IF NOT EXISTS borrow_list(
+     borrow_list_id serial PRIMARY KEY,
+     account_id serial REFERENCES account(account_id),
+     borrow_id serial REFERENCES borrow(borrow_id)
+    );

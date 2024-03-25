@@ -1,8 +1,10 @@
 package school.hei.bankapi.repository;
 
+import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.BankTransferList;
 import school.hei.bankapi.utils.PreparedStatementStep;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -45,7 +47,25 @@ public class TransferListCrudOperations extends CrudOperationsImpl<BankTransferL
     }
 
     @Override
-    public BankTransferList update(Integer id) {
-        return super.findById(id);
+    public BankTransferList update(Integer id, BankTransferList toUpdate) {
+        String sql = "UPDATE bank_transfer_list SET bank_transfer_id=?, account_sender_id=?, account_recipients_id=? WHERE bank_transfer_list_id=?";
+
+        try (Connection connection = ConnectionConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setInt(1, toUpdate.getBankTransferId());
+            preparedStatement.setInt(2, toUpdate.getAccountSenderId());
+            preparedStatement.setInt(3, toUpdate.getAccountRecipientId());
+            preparedStatement.setInt(4, id);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                return toUpdate;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return toUpdate;
     }
 }
