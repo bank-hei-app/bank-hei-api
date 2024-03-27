@@ -8,45 +8,45 @@ import school.hei.bankapi.utils.PreparedStatementStep;
 import java.sql.*;
 
 public class TransactionsCrudOperations extends CrudOperationsImpl<Transaction>{
-   @Override
-   public Transaction createT(ResultSet resultSet) throws SQLException {
-       return new Transaction(
-               resultSet.getInt(Transaction.iD),
-               resultSet.getInt(Transaction.accountId2),
-               resultSet.getDate(Transaction.dateOfTransaction2),
-               resultSet.getDouble(Transaction.amount2),
-               resultSet.getInt(Transaction.balanceTypeId2),
-               resultSet.getInt(Transaction.balanceCategoryId2)
-       );
-   }
+    @Override
+    public Transaction createT(ResultSet resultSet) throws SQLException {
+        return new Transaction(
+                resultSet.getInt(Transaction.iD),
+                resultSet.getInt(Transaction.accountId2),
+                resultSet.getDate(Transaction.dateOfTransaction2),
+                resultSet.getDouble(Transaction.amount2),
+                resultSet.getInt(Transaction.balanceTypeId2),
+                resultSet.getInt(Transaction.balanceCategoryId2)
+        );
+    }
     @Override
     public PreparedStatement createT(PreparedStatementStep pr, Transaction table) throws SQLException {
-       PreparedStatement preparedStatement = pr.getPreparedStatement();
+        PreparedStatement preparedStatement = pr.getPreparedStatement();
 
-       preparedStatement.setInt(1,table.getTransactionId());
-       preparedStatement.setInt(2,table.getAccountId());
-       preparedStatement.setTimestamp(3, new Timestamp(table.getDateOfTransaction().getTime()));
-       preparedStatement.setDouble(4,table.getAmount());
-       preparedStatement.setInt(5,table.getBalanceTypeId());
-       preparedStatement.setInt(6,table.getBalanceCategoryId());
+        preparedStatement.setInt(1,table.getTransactionId());
+        preparedStatement.setInt(2,table.getAccountId());
+        preparedStatement.setTimestamp(3, new Timestamp(table.getDateOfTransaction().getTime()));
+        preparedStatement.setDouble(4,table.getAmount());
+        preparedStatement.setInt(5,table.getBalanceTypeId());
+        preparedStatement.setInt(6,table.getBalanceCategoryId());
 
-       preparedStatement.executeUpdate();
+        preparedStatement.executeUpdate();
 
-       if(table.getBalanceTypeId() == BalanceType.DEBIT.getValue()){
-           Connection connection = preparedStatement.getConnection();
-           double accountBalance = getAccountBalance(connection, table.getAccountId());
+        if(table.getBalanceTypeId() == BalanceType.DEBIT.getValue()){
+            Connection connection = preparedStatement.getConnection();
+            double accountBalance = getAccountBalance(connection, table.getAccountId());
 
-           if (accountBalance >= table.getAmount()) {
-               String updateAccountBalanceQuery = "UPDATE account SET default_solde = default_solde - ? WHERE account_id = ?";
+            if (accountBalance >= table.getAmount()) {
+                String updateAccountBalanceQuery = "UPDATE account SET default_solde = default_solde - ? WHERE account_id = ?";
 
-               PreparedStatement preparedStatement1 = connection.prepareStatement(updateAccountBalanceQuery);
-               preparedStatement1.setDouble(1, table.getAmount());
-               preparedStatement1.setInt(2, table.getAccountId());
-               preparedStatement1.executeUpdate();
-           }else {
-               System.out.println("solde insufficient");
-           }
-       }
+                PreparedStatement preparedStatement1 = connection.prepareStatement(updateAccountBalanceQuery);
+                preparedStatement1.setDouble(1, table.getAmount());
+                preparedStatement1.setInt(2, table.getAccountId());
+                preparedStatement1.executeUpdate();
+            }else {
+                System.out.println("solde insufficient");
+            }
+        }
         if(table.getBalanceTypeId() == BalanceType.CREDIT.getValue()){
             Connection connection = preparedStatement.getConnection();
             double creditAuthorized = getCreditAuthorized(connection, table.getAccountId());
@@ -63,7 +63,7 @@ public class TransactionsCrudOperations extends CrudOperationsImpl<Transaction>{
 
         }
 
-       return preparedStatement;
+        return preparedStatement;
     }
 
     private enum BalanceType {
@@ -106,7 +106,7 @@ public class TransactionsCrudOperations extends CrudOperationsImpl<Transaction>{
                 }
             }
         }
-   }
+    }
     @Override
     public Class<Transaction> getClassT() {
         return Transaction.class;
