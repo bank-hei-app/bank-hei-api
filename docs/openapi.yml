@@ -1,9 +1,9 @@
 openapi: '3.0.3'
 info:
   title: Digital Banking in Madagascar
-  version: 1.0.0
+  version: "1.0"
 servers:
-  - url: https://DBM.com
+  - url: http://localhost:8080
 tags:
   - name: Account
   - name: Transfer
@@ -15,7 +15,7 @@ tags:
   - name: BalanceCategory
   - name: Transaction
 paths:
-  /account:
+  /accounts:
     get:
       tags:
         - Account
@@ -747,7 +747,7 @@ paths:
         '400':
           $ref: '#/components/responses/400'
 
-  /Transaction:
+  /transaction:
     get:
       summary: Retrieve all transactions
       operationId: getAlltransactions
@@ -1147,16 +1147,18 @@ components:
       properties:
         transaction_Id:
           type: integer
+        account_Id:
+          type: integer
         date_of_transaction:
           type: string
           format: date
         amount:
           type: integer
           format: double
-      required:
-        - account_Id
-        - balance_type_Id
-        - balance_category_Id
+        balance_type_Id:
+          type: integer
+        balance_category_Id:
+          type: integer
 
     ResponseStatus:
       type: object
