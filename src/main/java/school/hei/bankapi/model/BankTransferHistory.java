@@ -9,10 +9,10 @@ public class BankTransferHistory extends  DefaultModel {
     private int bankTransferHistoryId;
     @Column(name = BankTransferHistory.bankTransferId2)
     private int bankTransferId;
-
     public static final String tableName = "bank_transfer_history";
-    public static final String iD = "bank_transfer_history";
-    public static final String bankTransferId2 = "bank_transfer";
+    public static final String iD = "bank_transfer_history_id";
+    public static final String bankTransferId2 = "bank_transfer_id";
+
     public BankTransferHistory(int bankTransferHistoryId, int bankTransferId) {
         this.bankTransferHistoryId = bankTransferHistoryId;
         this.bankTransferId = bankTransferId;

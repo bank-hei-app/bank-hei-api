@@ -1,5 +1,6 @@
 package school.hei.bankapi.repository;
 
+import org.springframework.stereotype.Repository;
 import school.hei.bankapi.db.ConnectionConfig;
 import school.hei.bankapi.model.BankTransferList;
 import school.hei.bankapi.utils.PreparedStatementStep;
@@ -8,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+@Repository
 
 public class TransferListCrudOperations extends CrudOperationsImpl<BankTransferList> {
 
